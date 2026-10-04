@@ -1,0 +1,32 @@
+---
+import { readFile } from 'node:fs/promises';
+import Base from '../layouts/Base.astro';
+let items: any[] = [];
+try {
+  items = JSON.parse(await readFile(new URL('../data/hacktivities.json', import.meta.url), 'utf8'));
+} catch {}
+---
+
+<Base
+  title="Hacktivities — Krish Parajuli"
+  description="Labs, CTFs, platform rankings and future disclosures."
+>
+  <h1>Hacktivities</h1>
+  <ul>
+    {items.map((h) => (
+      <li>
+        <strong>{h.date}</strong> —{' '}
+        <a
+          href={
+            h.url.startsWith('/') ? `${import.meta.env.BASE_URL}${h.url.replace(/^\//, '')}` : h.url
+          }
+        >
+          {h.title}
+        </a>{' '}
+        ({h.type})<br />
+        {h.description}
+      </li>
+    ))}
+  </ul>
+  <p>Future CVE / bug-bounty disclosures will appear here when content is added.</p>
+</Base>

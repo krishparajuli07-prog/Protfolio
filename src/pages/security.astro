@@ -1,0 +1,52 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base
+  title="Security of this site — Krish Parajuli"
+  description="Headers, CSP, supply-chain controls and CI checks used on this portfolio."
+>
+  <h1>Security of this site</h1>
+  <p>
+    This portfolio is pure static files (<code>dist/</code>). No SSR, database, or vendor SDKs in
+    app code.
+  </p>
+  <h2>Headers</h2>
+  <ul>
+    <li>
+      Strict Content-Security-Policy (self-only; one hash-allowlisted theme script; no inline event
+      handlers)
+    </li>
+    <li>
+      Strict-Transport-Security, X-Content-Type-Options, frame-ancestors <code>'none'</code>,
+      Referrer-Policy, Permissions-Policy, COOP/CORP/COEP
+    </li>
+    <li>
+      Defined once in <code>config/security.headers.json</code>; generated to <code>_headers</code>,{' '}
+      <code>vercel.json</code>, <code>nginx.conf</code> by <code>scripts/generate-headers.mjs</code>
+    </li>
+  </ul>
+  <h2>Supply chain</h2>
+  <ul>
+    <li>
+      Pinned lockfile, <code>.nvmrc</code> + engines, Dependabot (npm/docker/actions),
+      dependency-review, OSV-Scanner, npm audit
+    </li>
+    <li>Docker images pinned by digest; SBOM (Syft) + signing (cosign) in CI</li>
+    <li>All fonts/images self-hosted; no third-party trackers; analytics off by default</li>
+  </ul>
+  <h2>CI checks</h2>
+  <ul>
+    <li>
+      Lint, typecheck, content-schema validation, HTML validation, broken-link check, axe/pa11y,
+      Lighthouse CI ≥ 95
+    </li>
+    <li>
+      gitleaks, CodeQL, Trivy, Scorecard (see <code>.github/workflows/</code>)
+    </li>
+  </ul>
+  <p>
+    Report issues via <a href={`${import.meta.env.BASE_URL}contact/`}>contact links</a>. See{' '}
+    <code>/.well-known/security.txt</code>.
+  </p>
+</Base>

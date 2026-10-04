@@ -1,0 +1,282 @@
+---
+import { getCollection } from 'astro:content';
+import { readFile } from 'node:fs/promises';
+import Base from '../layouts/Base.astro';
+
+const projects = (await getCollection('projects', ({ data }) => !data.draft)).sort((a, b) =>
+  a.data.title.localeCompare(b.data.title)
+);
+const writeups = (await getCollection('writeups', ({ data }) => !data.draft)).sort(
+  (a, b) => +b.data.pubDate - +a.data.pubDate
+);
+
+// Build-time computed stats — visible without JavaScript.
+const findings = projects.reduce((n, p) => n + (p.data.findingsCount ?? 0), 0);
+let certs: Array<{ status: string }> = [];
+try {
+  certs = JSON.parse(
+    await readFile(new URL('../data/certifications.json', import.meta.url), 'utf8')
+  );
+} catch {
+  certs = [];
+}
+const certsCompleted = certs.filter((c) => c.status === 'Complete').length;
+
+const featured = projects.filter((p) => p.data.featured).slice(0, 3);
+const latestWriteups = writeups.slice(0, 3);
+
+let skills: Array<{ group: string; items: string[] }> = [];
+let education: Array<{ school: string; program: string; period: string; detail: string }> = [];
+let hacktivities: Array<{
+  title: string;
+  type: string;
+  date: string;
+  url: string;
+  description: string;
+}> = [];
+let testimonials: Array<{ quote: string; author: string }> = [];
+try {
+  skills = JSON.parse(await readFile(new URL('../data/skills.json', import.meta.url), 'utf8'));
+} catch {}
+try {
+  education = JSON.parse(
+    await readFile(new URL('../data/education.json', import.meta.url), 'utf8')
+  );
+} catch {}
+try {
+  hacktivities = JSON.parse(
+    await readFile(new URL('../data/hacktivities.json', import.meta.url), 'utf8')
+  );
+} catch {}
+try {
+  testimonials = JSON.parse(
+    await readFile(new URL('../data/testimonials.json', import.meta.url), 'utf8')
+  );
+} catch {}
+---
+
+<Base
+  title="Krish Parajuli — Web Application Security | Ethical Hacking Student"
+  description="BSc Ethical Hacking & Cyber Security student focused on authorized web application VAPT, CVSS-rated reporting and remediation. Based in Kathmandu, Nepal."
+>
+  <section class="hero" aria-label="Introduction">
+    <div>
+      <p>
+        <span class="pill">Open to internships / junior roles</span>
+      </p>
+      <h1>
+        Hi, I'm Krish
+        <span class="cursor" aria-hidden="true">
+          _
+        </span>
+      </h1>
+      <p>
+        <strong>Enumerate. Exploit. Validate. Report. Remediate.</strong>
+      </p>
+      <p>
+        BSc (Hons) Ethical Hacking &amp; Cyber Security student — aspiring Web Application Security
+        Analyst / Junior Penetration Tester.
+      </p>
+      <p>
+        <a class="btn btn-primary" href={`${import.meta.env.BASE_URL}contact/`}>
+          Get in touch
+        </a>{' '}
+        <a class="btn btn-ghost" href={`${import.meta.env.BASE_URL}projects/`}>
+          View projects
+        </a>
+      </p>
+      <p>
+        <a href="https://www.linkedin.com/in/krishparajuli">LinkedIn</a>
+        {' · '}
+        <a href="https://github.com/krishparajuli">GitHub</a>
+        {' · '}
+        <a href="https://tryhackme.com">TryHackMe</a>
+      </p>
+    </div>
+    <aside class="terminal" aria-label="whoami card">
+      <p>$ whoami</p>
+      <p data-typed="role: web-app-security student | focus: SQLi, LFI, upload, authZ | loc: Kathmandu, NP">
+        role: web-app-security student | focus: SQLi, LFI, upload, authZ | loc: Kathmandu, NP
+      </p>
+      <noscript>
+        <p>
+          role: web-app-security student
+          <br />
+          focus: SQLi, LFI, upload, authZ
+          <br />
+          loc: Kathmandu, NP
+        </p>
+      </noscript>
+    </aside>
+  </section>
+
+  <section aria-label="Stats">
+    <ul class="stat-strip">
+      <li>
+        <strong data-count={projects.length}>{projects.length}</strong>
+        <span>projects completed</span>
+      </li>
+      <li>
+        <strong data-count={findings}>{findings}</strong>
+        <span>findings documented</span>
+      </li>
+      <li>
+        <strong data-count={certsCompleted}>{certsCompleted}</strong>
+        <span>certifications completed</span>
+      </li>
+      <li>
+        <strong>Top 100</strong>
+        <span>TryHackMe · Nepal</span>
+      </li>
+    </ul>
+  </section>
+
+  <section class="fade-in" aria-labelledby="about-h">
+    <h2 id="about-h">About</h2>
+    <p>
+      BSc (Hons) Ethical Hacking &amp; Cyber Security student focused on web application security. I
+      practice authorized black-box VAPT in lab environments — SQL injection, LFI/path traversal,
+      insecure file upload, and auth &amp; access-control testing — and write CVSS v3.1-rated
+      reports with remediation guidance.
+    </p>
+    <p>
+      <a href={`${import.meta.env.BASE_URL}about/`}>Read more →</a>
+    </p>
+  </section>
+
+  <section class="fade-in" aria-labelledby="skills-h">
+    <h2 id="skills-h">Skills &amp; Expertise</h2>
+    <div class="cards">
+      {skills.map((g) => (
+        <div class="card">
+          <h3>{g.group}</h3>
+          <ul class="tags">
+            {g.items.map((i) => (
+              <li>{i}</li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="fade-in" aria-labelledby="cred-h">
+    <h2 id="cred-h">Credentials</h2>
+    <div class="cards two">
+      <div class="card">
+        <h3>Certifications</h3>
+        <ul>
+          {certs.slice(0, 4).map((c: any) => (
+            <li>
+              {c.title} — {c.issuer} <span class="badge complete">{c.status}</span>
+            </li>
+          ))}
+        </ul>
+        <p>
+          <a href={`${import.meta.env.BASE_URL}certifications/`}>View all →</a>
+        </p>
+      </div>
+      <div class="card">
+        <h3>Education</h3>
+        <ul>
+          {education.map((e) => (
+            <li>
+              <strong>{e.school}</strong>
+              <br />
+              {e.program} · {e.period}
+            </li>
+          ))}
+        </ul>
+        <p>
+          <a href={`${import.meta.env.BASE_URL}about/`}>View all →</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="fade-in" aria-labelledby="feat-h">
+    <h2 id="feat-h">Featured Projects</h2>
+    <div class="cards">
+      {featured.map((p) => (
+        <article class="card" data-tags={p.data.tags.join(' ')}>
+          <h3>{p.data.title}</h3>
+          <p>
+            {p.data.year} · {p.data.findingsCount} findings
+          </p>
+          <ul class="tags">
+            {p.data.tags.map((t) => (
+              <li>{t}</li>
+            ))}
+          </ul>
+          <p>{p.data.summary}</p>
+          <p>
+            <a href={`${import.meta.env.BASE_URL}projects/${p.slug}/`}>Read case study →</a>
+          </p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="fade-in" aria-labelledby="hack-h">
+    <h2 id="hack-h">Hacktivities</h2>
+    <ul>
+      {hacktivities.map((h) => (
+        <li>
+          <a
+            href={
+              h.url.startsWith('/')
+                ? `${import.meta.env.BASE_URL}${h.url.replace(/^\//, '')}`
+                : h.url
+            }
+          >
+            {h.title}
+          </a>{' '}
+          — {h.type} · {h.date}
+        </li>
+      ))}
+    </ul>
+    <p>
+      <a href={`${import.meta.env.BASE_URL}hacktivities/`}>All hacktivities →</a>
+    </p>
+  </section>
+
+  <section class="fade-in" aria-labelledby="wu-h">
+    <h2 id="wu-h">Latest Writeups</h2>
+    <div class="cards">
+      {latestWriteups.map((w) => (
+        <article class="card">
+          <h3>
+            <a href={`${import.meta.env.BASE_URL}writeups/${w.slug}/`}>{w.data.title}</a>
+          </h3>
+          <p>{w.data.description}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  {testimonials.length > 0 && (
+    <section aria-labelledby="testi-h">
+      <h2 id="testi-h">Testimonials</h2>
+      <div class="cards">
+        {testimonials.map((t: any) => (
+          <figure class="card">
+            <blockquote>{t.quote}</blockquote>
+            <figcaption>— {t.author}</figcaption>
+          </figure>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <section class="fade-in" aria-labelledby="cta-h">
+    <h2 id="cta-h">Let's work together</h2>
+    <p>
+      <a class="btn btn-primary" href="mailto:krish.parajuli@example.com">
+        krish [at] example [dot] com
+      </a>{' '}
+      <a class="btn btn-ghost" href="https://www.linkedin.com/in/krishparajuli">
+        LinkedIn
+      </a>
+    </p>
+  </section>
+</Base>

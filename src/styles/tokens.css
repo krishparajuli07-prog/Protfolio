@@ -1,0 +1,48 @@
+/* Design tokens — dark terminal/console aesthetic, WCAG AA tuned. */
+:root {
+  --bg: #0b1220;
+  --bg-raised: #101a30;
+  --bg-inset: #070d18;
+  --text: #e6edf3;
+  --muted: #9fb0c3;
+  --primary: #2dd4bf;
+  --primary-ink: #06281f;
+  --highlight: #f59e0b;
+  --border: #223148;
+  --card: #0f1930;
+  --focus: #f59e0b;
+  --mono:
+    'JetBrains Mono', 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --sans: system-ui, -apple-system, 'Segoe UI', Roboto, Ubuntu, sans-serif;
+  --radius: 10px;
+  --maxw: 72rem;
+}
+
+[data-theme='light'] {
+  --bg: #f6f8fb;
+  --bg-raised: #ffffff;
+  --bg-inset: #eef2f7;
+  --text: #0b1220;
+  --muted: #46566b;
+  --primary: #0d7a6f;
+  --primary-ink: #ffffff;
+  --highlight: #9a5b00;
+  --border: #d5dde8;
+  --card: #ffffff;
+  --focus: #9a5b00;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    --bg: #f6f8fb;
+    --bg-raised: #ffffff;
+    --bg-inset: #eef2f7;
+    --text: #0b1220;
+    --muted: #46566b;
+    --primary: #0d7a6f;
+    --primary-ink: #ffffff;
+    --highlight: #9a5b00;
+    --border: #d5dde8;
+    --card: #ffffff;
+  }
+}

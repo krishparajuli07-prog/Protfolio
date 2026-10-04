@@ -1,0 +1,21 @@
+# Short bio shown on Home with "Read more" -> /about
+shortBio: BSc (Hons) Ethical Hacking & Cyber Security student focused on web application security. I practice authorized black-box VAPT in lab environments — SQL injection, LFI/path traversal, insecure file upload, and auth & access-control testing — and write CVSS v3.1-rated reports with remediation guidance.
+longBio: >
+  I'm Krish Parajuli, a BSc (Hons) Ethical Hacking & Cyber Security student at Softwarica College
+  of IT & E-Commerce (in collaboration with Coventry University), studying from November 2024 to 2027
+  (expected) on an academic scholarship. My core focus is web application security: authorized
+  black-box vulnerability assessment and penetration testing, careful non-destructive proof-of-concepts,
+  CVSS v3.1 risk rating, and clear remediation guidance. I work with Burp Suite, Nmap/RustScan,
+  Gobuster/FFUF, curl, Kali Linux, Bash, Python and Git, and document everything so findings are
+  repeatable. My supporting background includes segmented enterprise networking (VLANs, ACLs, OSPF,
+  VPN, firewall, DMZ) and digital forensics (disk, memory, network, email, Android). Next I am
+  working through PortSwigger Web Security Academy labs, with eJPT/eWPT or BSCP as a long-term goal.
+languages:
+  - English
+  - Nepali
+interests:
+  - Web application security
+  - Authorized VAPT labs
+  - Linux & scripting
+  - Defensive networking basics
+currentlyLearning: PortSwigger Web Security Academy labs (next); eJPT / eWPT or BSCP (long-term)

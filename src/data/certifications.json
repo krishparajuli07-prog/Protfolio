@@ -1,0 +1,44 @@
+[
+  {
+    "title": "Junior Penetration Tester",
+    "issuer": "TryHackMe",
+    "date": "2025-05-14",
+    "status": "Complete",
+    "verifyUrl": "https://tryhackme.com"
+  },
+  {
+    "title": "Web Fundamentals",
+    "issuer": "TryHackMe",
+    "date": "2025-05-15",
+    "status": "Complete",
+    "verifyUrl": "https://tryhackme.com"
+  },
+  {
+    "title": "Cyber Security 101",
+    "issuer": "TryHackMe",
+    "date": "2025-05-06",
+    "status": "Complete",
+    "verifyUrl": "https://tryhackme.com"
+  },
+  {
+    "title": "Pre Security",
+    "issuer": "TryHackMe",
+    "date": "2025-04-29",
+    "status": "Complete",
+    "verifyUrl": "https://tryhackme.com"
+  },
+  {
+    "title": "PortSwigger Web Security Academy Labs",
+    "issuer": "PortSwigger",
+    "date": null,
+    "status": "Next",
+    "verifyUrl": null
+  },
+  {
+    "title": "eJPT / eWPT or BSCP",
+    "issuer": "INE / PortSwigger",
+    "date": null,
+    "status": "Planned",
+    "verifyUrl": null
+  }
+]

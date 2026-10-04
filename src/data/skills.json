@@ -1,0 +1,38 @@
+[
+  {
+    "group": "Assessment & Enumeration",
+    "items": [
+      "Black-box reconnaissance",
+      "Nmap / RustScan scanning",
+      "Content discovery (Gobuster / FFUF)",
+      "curl & manual request inspection"
+    ]
+  },
+  {
+    "group": "Vulnerability Testing",
+    "items": [
+      "SQL injection",
+      "LFI / path traversal",
+      "Insecure file upload",
+      "Authentication & access-control testing"
+    ]
+  },
+  {
+    "group": "Validation & Reporting",
+    "items": [
+      "Non-destructive PoC validation",
+      "CVSS v3.1 risk rating",
+      "Attack-chain documentation",
+      "Remediation guidance"
+    ]
+  },
+  {
+    "group": "Tools & Systems",
+    "items": [
+      "Burp Suite",
+      "Kali Linux / Ubuntu",
+      "Bash & Python scripting",
+      "Git & repeatable docs"
+    ]
+  }
+]

@@ -1,0 +1,49 @@
+{
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=63072000; includeSubDomains; preload"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=(), payment=()"
+        },
+        {
+          "key": "Cross-Origin-Opener-Policy",
+          "value": "same-origin"
+        },
+        {
+          "key": "Cross-Origin-Resource-Policy",
+          "value": "same-origin"
+        },
+        {
+          "key": "Cross-Origin-Embedder-Policy",
+          "value": "require-corp"
+        },
+        {
+          "key": "Origin-Agent-Cluster",
+          "value": "?1"
+        },
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' 'sha256-+Tv63f3xuCaXeXR+K0LvQBWyngghUeiyoFKp/OcbmBU=' 'sha256-0/mN3GoQ4nqniMY/TpGOVSaYR6F5cbNSNg4Jv8Ek624=' 'sha256-2KmbYisVbi6BTQsI+ymdO8Dltf6/c+NF1m3mXdDzw2w=' 'sha256-64no5TBVV7ViPVK2Hso5Zz70nQs3B7QgDtIeBa9zq2c=' 'sha256-YoljRz09DZKRZEnU2d0ApObIWSSQV+8tpZamihM+Cug=' 'sha256-Z5m+Z2AEGDOfufZMoMWJJgequxZRvhqg9WxI2Cm5NIM=' 'sha256-cJ79glkSLJUdsoa6A2RpLhJHvcj137Sx1FVMGPHrmjE=' 'sha256-uW1Dzy54hfMD7LwI2VMhzPLnE2/JyEIcA43xbR708Ls='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'; upgrade-insecure-requests"
+        }
+      ]
+    }
+  ]
+}

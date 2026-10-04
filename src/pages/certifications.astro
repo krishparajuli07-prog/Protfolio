@@ -1,0 +1,37 @@
+---
+import { readFile } from 'node:fs/promises';
+import Base from '../layouts/Base.astro';
+let certs: any[] = [];
+try {
+  certs = JSON.parse(
+    await readFile(new URL('../data/certifications.json', import.meta.url), 'utf8')
+  );
+} catch {}
+---
+
+<Base
+  title="Certifications — Krish Parajuli"
+  description="TryHackMe certifications with status badges, plus next and planned goals."
+>
+  <h1>Certifications</h1>
+  <div class="cards">
+    {certs.map((c) => (
+      <div class="card">
+        <h2>{c.title}</h2>
+        <p>
+          {c.issuer}
+          {c.date ? ` · ${c.date}` : ''}
+        </p>
+        <p>
+          <span class={`badge ${c.status.toLowerCase()}`}>{c.status}</span>
+        </p>
+        {c.verifyUrl && (
+          <p>
+            <a href={c.verifyUrl}>Verification link →</a>
+          </p>
+        )}
+      </div>
+    ))}
+  </div>
+  <p>Achievement: Top 100 Nepal on TryHackMe.</p>
+</Base>

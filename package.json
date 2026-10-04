@@ -1,0 +1,39 @@
+{
+  "name": "krish-parajuli-portfolio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Static portfolio for Krish Parajuli — BSc Ethical Hacking & Cyber Security student.",
+  "type": "module",
+  "engines": {
+    "node": ">=20 <23"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build && node ./scripts/generate-sitemap.mjs && node ./scripts/generate-headers.mjs && node ./scripts/validate-content.mjs",
+    "preview": "astro preview",
+    "headers": "node ./scripts/generate-headers.mjs && node ./scripts/generate-sitemap.mjs",
+    "stats:build": "node ./scripts/build-stats.mjs",
+    "stats:check": "node ./scripts/validate-content.mjs",
+    "validate": "node ./scripts/validate-content.mjs",
+    "check:links": "node ./scripts/check-links.mjs dist",
+    "lint": "eslint . --max-warnings=0 && prettier --check . && markdownlint \"**/*.md\" --ignore node_modules --ignore dist --ignore .astro",
+    "format": "prettier --write .",
+    "typecheck": "astro check && tsc --noEmit",
+    "test": "node --test tests/*.test.mjs",
+    "deploy:prepare": "node deploy/prepare-static.mjs && node deploy/vercel/prepare.mjs",
+    "test:portability": "node --test tests/portability/*.test.mjs"
+  },
+  "dependencies": {
+    "@astrojs/rss": "^4.0.7",
+    "astro": "^4.16.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@typescript-eslint/parser": "^8.46.1",
+    "eslint": "^9.12.0",
+    "markdownlint-cli": "^0.41.0",
+    "prettier": "^3.3.3",
+    "prettier-plugin-astro": "^1.1.0",
+    "typescript": "^5.6.3"
+  }
+}

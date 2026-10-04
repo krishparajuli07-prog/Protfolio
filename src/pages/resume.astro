@@ -1,0 +1,53 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base
+  title="Resume — Krish Parajuli"
+  description="Downloadable PDF and print-friendly HTML resume."
+>
+  <h1>Resume</h1>
+  <p>
+    <a class="btn btn-primary" href={`${import.meta.env.BASE_URL}resume.pdf`}>
+      Download PDF
+    </a>{' '}
+    <button class="btn btn-ghost no-print" type="button" onclick="window.print()">
+      Print
+    </button>
+  </p>
+  <div class="card">
+    <h2>Krish Parajuli</h2>
+    <p>
+      BSc (Hons) Ethical Hacking &amp; Cyber Security student | Aspiring Web Application Security
+      Analyst / Junior Penetration Tester — Kathmandu, Nepal
+    </p>
+    <h3>Focus</h3>
+    <p>
+      Web application security, authorized black-box VAPT, SQL injection, LFI/path traversal,
+      insecure file upload, auth &amp; access-control testing, CVSS v3.1, remediation guidance.
+    </p>
+    <h3>Projects</h3>
+    <ul>
+      <li>Practical Web Application Penetration Test — 12 findings, CVSS-rated report (2026)</li>
+      <li>CipherLab Web Application Security Assessment — auth/anon testing (2026)</li>
+      <li>Linux Web Security Lab — Kali/Ubuntu, scripting, docs (2025–present)</li>
+    </ul>
+    <h3>Certifications (TryHackMe)</h3>
+    <ul>
+      <li>
+        Pre Security — 29 Apr 2025; Cyber Security 101 — 06 May 2025; Junior Penetration Tester — 14
+        May 2025; Web Fundamentals — 15 May 2025. Top 100 Nepal.
+      </li>
+    </ul>
+    <h3>Education</h3>
+    <ul>
+      <li>
+        Softwarica College (Coventry University) — BSc Ethical Hacking &amp; Cyber Security,
+        11/2024–2027, scholarship
+      </li>
+      <li>KIST College — SLC 2021–2023, GPA 3.47/4.0</li>
+    </ul>
+    <h3>Tools</h3>
+    <p>Burp Suite, Nmap/RustScan, Gobuster/FFUF, curl, Kali Linux, Bash, Python, Git</p>
+  </div>
+</Base>

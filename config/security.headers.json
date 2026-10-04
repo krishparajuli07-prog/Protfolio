@@ -1,0 +1,33 @@
+{
+  "_comment": "VENDOR-NEUTRAL header source. scripts/generate-headers.mjs renders _headers, vercel.json and nginx.conf from this file. Edit ONLY here.",
+  "headers": [
+    {
+      "name": "Strict-Transport-Security",
+      "value": "max-age=63072000; includeSubDomains; preload"
+    },
+    { "name": "X-Content-Type-Options", "value": "nosniff" },
+    { "name": "X-Frame-Options", "value": "DENY" },
+    { "name": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+    {
+      "name": "Permissions-Policy",
+      "value": "camera=(), microphone=(), geolocation=(), payment=()"
+    },
+    { "name": "Cross-Origin-Opener-Policy", "value": "same-origin" },
+    { "name": "Cross-Origin-Resource-Policy", "value": "same-origin" },
+    { "name": "Cross-Origin-Embedder-Policy", "value": "require-corp" },
+    { "name": "Origin-Agent-Cluster", "value": "?1" }
+  ],
+  "csp": {
+    "default-src": ["'self'"],
+    "script-src": ["'self'", "'THEME_HASH'"],
+    "style-src": ["'self'", "'unsafe-inline'"],
+    "img-src": ["'self'", "data:"],
+    "font-src": ["'self'"],
+    "connect-src": ["'self'"],
+    "object-src": ["'none'"],
+    "base-uri": ["'self'"],
+    "frame-ancestors": ["'none'"],
+    "form-action": ["'self'"],
+    "upgrade-insecure-requests": []
+  }
+}

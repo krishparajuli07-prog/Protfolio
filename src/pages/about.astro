@@ -1,0 +1,78 @@
+---
+import { readFile } from 'node:fs/promises';
+import Base from '../layouts/Base.astro';
+let education: any[] = [];
+let skills: any[] = [];
+try {
+  education = JSON.parse(
+    await readFile(new URL('../data/education.json', import.meta.url), 'utf8')
+  );
+} catch {}
+try {
+  skills = JSON.parse(await readFile(new URL('../data/skills.json', import.meta.url), 'utf8'));
+} catch {}
+---
+
+<Base
+  title="About — Krish Parajuli"
+  description="Story, education, learning timeline and supporting experience of Krish Parajuli, ethical hacking student in Kathmandu."
+>
+  <h1>About</h1>
+  <p>
+    I'm Krish Parajuli, a BSc (Hons) Ethical Hacking &amp; Cyber Security student at Softwarica
+    College of IT &amp; E-Commerce (in collaboration with Coventry University), 11/2024–2027
+    (expected), on an academic scholarship. I focus on authorized web-application VAPT with careful,
+    non-destructive PoCs and CVSS v3.1-rated remediation guidance.
+  </p>
+  <h2>Education</h2>
+  {education.map((e) => (
+    <div class="card">
+      <h3>{e.school}</h3>
+      <p>
+        {e.program} · {e.period}
+      </p>
+      <p>{e.detail}</p>
+    </div>
+  ))}
+  <h2>Timeline</h2>
+  <ul>
+    <li>
+      <strong>2021–2023</strong> — KIST College, SLC, GPA 3.47/4.0
+    </li>
+    <li>
+      <strong>Apr–May 2025</strong> — TryHackMe: Pre Security → Cyber Security 101 → Junior
+      Penetration Tester → Web Fundamentals; Top 100 Nepal
+    </li>
+    <li>
+      <strong>2025–present</strong> — Linux Web Security Lab (Kali/Ubuntu, scripting, docs)
+    </li>
+    <li>
+      <strong>2026</strong> — Practical Web App Pentest (12 findings) + CipherLab assessment
+    </li>
+    <li>
+      <strong>Next</strong> — PortSwigger Web Security Academy labs; long-term eJPT/eWPT or BSCP
+    </li>
+  </ul>
+  <h2>Supporting experience</h2>
+  <ul>
+    <li>Segmented enterprise network: VLANs, ACLs, OSPF, VPN, firewall, DMZ</li>
+    <li>Digital forensics: disk, memory, network, email, Android</li>
+  </ul>
+  <h2>Languages &amp; interests</h2>
+  <p>
+    Languages: English, Nepali. Interests: web application security, authorized VAPT labs, Linux
+    &amp; scripting, defensive networking basics.
+  </p>
+  <img
+    src={`${import.meta.env.BASE_URL}images/portrait.svg`}
+    alt="Placeholder portrait of Krish Parajuli — replace with a real photo"
+    width="320"
+    height="320"
+    loading="lazy"
+  />
+  <p>
+    <small>
+      Replace <code>public/images/portrait.svg</code> with your photo (keep width/height + alt).
+    </small>
+  </p>
+</Base>

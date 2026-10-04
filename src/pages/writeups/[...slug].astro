@@ -1,0 +1,46 @@
+---
+import { getCollection } from 'astro:content';
+import { readingTime } from '../../utils/site';
+import Base from '../../layouts/Base.astro';
+export async function getStaticPaths() {
+  const posts = await getCollection('writeups', ({ data }) => !data.draft);
+  return posts.map((w) => ({ params: { slug: w.slug }, props: { w } }));
+}
+const { w } = Astro.props;
+const { Content, headings } = await w.render();
+const mins = readingTime(w.body);
+---
+
+<Base
+  title={`${w.data.title} — Writeup`}
+  description={w.data.description}
+  type="article"
+  pubDate={w.data.pubDate.toISOString()}
+>
+  <p>
+    <a href={`${import.meta.env.BASE_URL}writeups/`}>← Writeups</a>
+  </p>
+  <h1>{w.data.title}</h1>
+  <p>
+    <time datetime={w.data.pubDate.toISOString()}>{w.data.pubDate.toISOString().slice(0, 10)}</time>{' '}
+    · {mins} min read
+  </p>
+  <ul class="tags">
+    {w.data.tags.map((t: string) => (
+      <li>{t}</li>
+    ))}
+  </ul>
+  {headings.length > 0 && (
+    <nav aria-label="Table of contents">
+      <h2>On this page</h2>
+      <ul>
+        {headings.map((h: any) => (
+          <li>
+            <a href={`#${h.slug}`}>{h.text}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )}
+  <Content />
+</Base>

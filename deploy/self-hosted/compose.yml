@@ -1,0 +1,17 @@
+name: portfolio-production
+services:
+  web:
+    image: portfolio-production:${DEPLOY_SHA:-local}
+    build:
+      context: ../..
+      dockerfile: deploy/self-hosted/Dockerfile
+      args:
+        BASE_PATH: ${BASE_PATH:-}
+    ports:
+      - '${PROD_PORT:-8080}:8080'
+    restart: unless-stopped
+    read_only: true
+    tmpfs: [/tmp, /var/cache/nginx, /var/run]
+    cap_drop: [ALL]
+    security_opt: ['no-new-privileges:true']
+    user: '101'

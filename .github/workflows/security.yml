@@ -1,0 +1,62 @@
+name: security
+on:
+  pull_request: {}
+  push:
+    branches: [main]
+  schedule:
+    - cron: '0 3 * * 1'
+permissions:
+  contents: read
+jobs:
+  secrets-audit:
+    runs-on: [self-hosted, linux, debian]
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@ff98106e1c13f8c3d4a7fc39b6d3fce5c4ff3a0 # v2.3.9
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: npm audit --audit-level=moderate
+      - uses: aquasecurity/trivy-action@dc5a429b52fcf669ce959baa2c2d260d6366a5f # 0.29.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          severity: HIGH,CRITICAL
+  codeql:
+    runs-on: [self-hosted, linux, debian]
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: github/codeql-action/init@949a3d2f368b033cf7659bc2aec3c0b0dc7ffd9e5 # v3.28.0
+        with:
+          languages: javascript-typescript
+      - uses: github/codeql-action/analyze@949a3d2f368b033cf7659bc2aec3c0b0dc7ffd9e5 # v3.28.0
+  scorecard:
+    runs-on: [self-hosted, linux, debian]
+    permissions:
+      security-events: write
+      id-token: write
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - uses: ossf/scorecard-action@05b42bb16d2c155c3fc8a79cf3db1998d09832ed # v2.4.1
+        with:
+          results_file: results.sarif
+          results_format: sarif
+      - uses: github/codeql-action/upload-sarif@949a3d2f368b033cf7659bc2aec3c0b0dc7ffd9e5 # v3.28.0
+        with:
+          sarif_file: results.sarif

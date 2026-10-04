@@ -1,0 +1,77 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+export async function getStaticPaths() {
+  const projects = await getCollection('projects', ({ data }) => !data.draft);
+  return projects.map((p) => ({ params: { slug: p.slug }, props: { p } }));
+}
+const { p } = Astro.props;
+const { Content } = await p.render();
+---
+
+<Base title={`${p.data.title} — Case Study`} description={p.data.summary} type="article">
+  <p>
+    <a href={`${import.meta.env.BASE_URL}projects/`}>← Projects</a>
+  </p>
+  <h1>{p.data.title}</h1>
+  <p>
+    {p.data.year} · {p.data.findingsCount} findings · {p.data.tools.join(', ')}
+  </p>
+  <ul class="tags">
+    {p.data.tags.map((t: string) => (
+      <li>{t}</li>
+    ))}
+  </ul>
+  <h2>Scope</h2>
+  <p>{p.data.scope}</p>
+  <h2>Methodology</h2>
+  <ol>
+    {p.data.methodology.map((m: string) => (
+      <li>{m}</li>
+    ))}
+  </ol>
+  <h2>Tools</h2>
+  <ul class="tags">
+    {p.data.tools.map((t: string) => (
+      <li>{t}</li>
+    ))}
+  </ul>
+  {p.data.findings.length > 0 && (
+    <>
+      <h2>Findings (CVSS v3.1)</h2>
+      <table class="findings">
+        <thead>
+          <tr>
+            <th>Finding</th>
+            <th>Severity</th>
+            <th>CVSS</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          {p.data.findings.map((f: any) => (
+            <tr>
+              <td>{f.title}</td>
+              <td>{f.severity}</td>
+              <td>
+                <code>{f.cvss}</code>
+              </td>
+              <td>{f.description}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </>
+  )}
+  {p.data.remediation.length > 0 && (
+    <>
+      <h2>Remediation</h2>
+      <ul>
+        {p.data.remediation.map((r: string) => (
+          <li>{r}</li>
+        ))}
+      </ul>
+    </>
+  )}
+  <Content />
+</Base>

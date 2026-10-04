@@ -1,0 +1,15 @@
+# Site-wide config. The "Open to internships / junior roles" pill is driven by openToWork.
+name: Krish Parajuli
+headline: BSc (Hons) Ethical Hacking & Cyber Security student | Aspiring Web Application Security Analyst / Junior Penetration Tester
+tagline: Enumerate. Exploit. Validate. Report. Remediate.
+location: Kathmandu, Nepal
+openToWork: true
+openToWorkLabel: Open to internships / junior roles
+emailObfuscated: krish [at] example [dot] com
+emailHref: mailto:krish.parajuli@example.com
+linkedin: https://www.linkedin.com/in/krishparajuli
+github: https://github.com/krishparajuli
+# Privacy-friendly analytics, off by default. Set enabled: true + scriptSrc to enable.
+analytics:
+  enabled: false
+  scriptSrc: ''

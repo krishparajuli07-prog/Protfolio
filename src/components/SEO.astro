@@ -1,0 +1,52 @@
+---
+// SEO head: canonical, OG/Twitter cards (auto-generated per page at build time), JSON-LD.
+interface Props {
+  title: string;
+  description: string;
+  type?: 'website' | 'article';
+  pubDate?: string;
+}
+const { title, description, type = 'website', pubDate } = Astro.props;
+const site = Astro.site?.toString().replace(/\/$/, '') ?? '';
+const url = new URL(Astro.url.pathname, Astro.site ?? 'http://localhost:4321').toString();
+const ogImage = new URL(
+  `${import.meta.env.BASE_URL}images/og-default.svg`,
+  Astro.site ?? 'http://localhost:4321'
+).toString();
+const canonical = url;
+---
+
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+<meta property="og:type" content={type} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={url} />
+<meta property="og:image" content={ogImage} />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />
+<script
+  type="application/ld+json"
+  set:html={JSON.stringify(
+    type === 'article'
+      ? {
+          '@context': 'https://schema.org',
+          '@type': 'Article',
+          headline: title,
+          description,
+          author: { '@type': 'Person', name: 'Krish Parajuli' },
+          datePublished: pubDate
+        }
+      : {
+          '@context': 'https://schema.org',
+          '@type': 'Person',
+          name: 'Krish Parajuli',
+          jobTitle: 'Aspiring Web Application Security Analyst / Junior Penetration Tester',
+          address: { '@type': 'PostalAddress', addressLocality: 'Kathmandu', addressCountry: 'NP' },
+          url: site
+        }
+  )}
+/>

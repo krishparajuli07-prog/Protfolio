@@ -1,0 +1,50 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+const projects = (await getCollection('projects', ({ data }) => !data.draft)).sort((a, b) =>
+  a.data.title.localeCompare(b.data.title)
+);
+const allTags = [...new Set(projects.flatMap((p) => p.data.tags))].sort();
+---
+
+<Base
+  title="Projects — Krish Parajuli"
+  description="Sanitized pentest case studies: scope, methodology, CVSS findings, attack chains and remediation."
+>
+  <h1>Projects</h1>
+  <p>
+    Sanitized summaries only — no real targets, credentials, client data, or weaponized exploit
+    code.
+  </p>
+  <label for="project-filter">Filter by tag:</label>
+  <select id="project-filter" class="no-print">
+    <option value="all">All</option>
+    {allTags.map((t) => (
+      <option value={t}>{t}</option>
+    ))}
+  </select>
+  <div class="cards">
+    {projects.map((p) => (
+      <article class="card" data-tags={p.data.tags.join(' ')}>
+        <h2>
+          <a href={`${import.meta.env.BASE_URL}projects/${p.slug}/`}>{p.data.title}</a>
+        </h2>
+        <p>
+          {p.data.year} · {p.data.findingsCount} findings
+        </p>
+        <ul class="tags">
+          {p.data.tags.map((t) => (
+            <li>{t}</li>
+          ))}
+        </ul>
+        <p>{p.data.summary}</p>
+        <p>
+          <a href={`${import.meta.env.BASE_URL}projects/${p.slug}/`}>Read case study →</a>
+        </p>
+      </article>
+    ))}
+  </div>
+  <noscript>
+    <p>Filtering needs JavaScript; all projects are listed above.</p>
+  </noscript>
+</Base>

@@ -1,0 +1,30 @@
+[
+  {
+    "title": "Top 100 Nepal on TryHackMe",
+    "type": "Platform ranking",
+    "date": "2025-05",
+    "url": "https://tryhackme.com",
+    "description": "Ranked in the Top 100 for Nepal on TryHackMe."
+  },
+  {
+    "title": "Practical Web Application Penetration Test — 12 findings documented",
+    "type": "Lab",
+    "date": "2026",
+    "url": "/projects/practical-webapp-pentest/",
+    "description": "Authorized black-box VAPT of self-hosted PHP + Django labs with a CVSS-rated report."
+  },
+  {
+    "title": "CipherLab Web Application Security Assessment",
+    "type": "Lab",
+    "date": "2026",
+    "url": "/projects/cipherlab-assessment/",
+    "description": "Authenticated and unauthenticated testing with non-destructive PoCs."
+  },
+  {
+    "title": "Linux Web Security Lab",
+    "type": "Lab",
+    "date": "2025",
+    "url": "/projects/linux-web-security-lab/",
+    "description": "Kali/Ubuntu environment setup, scripting and repeatable documentation."
+  }
+]

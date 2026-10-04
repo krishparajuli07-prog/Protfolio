@@ -1,0 +1,9 @@
+# Override the root ignore file: this image serves the already-built artifact.
+**
+!dist/
+!dist/**
+!deploy/
+!deploy/generated/
+!deploy/generated/nginx.conf
+!deploy/docker/
+!deploy/docker/headers.conf

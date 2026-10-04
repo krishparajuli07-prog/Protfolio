@@ -1,0 +1,97 @@
+---
+import '../styles/tokens.css';
+import '../styles/global.css';
+import '../styles/print.css';
+import SEO from '../components/SEO.astro';
+import ThemeInit from '../components/ThemeInit.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  type?: 'website' | 'article';
+  pubDate?: string;
+}
+const { title, description, type = 'website', pubDate } = Astro.props;
+const current = Astro.url.pathname;
+const links = [
+  ['/', 'Home'],
+  ['/about/', 'About'],
+  ['/projects/', 'Projects'],
+  ['/writeups/', 'Writeups'],
+  ['/certifications/', 'Certifications'],
+  ['/hacktivities/', 'Hacktivities'],
+  ['/resume/', 'Resume'],
+  ['/contact/', 'Contact']
+] as const;
+function active(href: string): boolean {
+  if (href === '/') return current === '/' || current === '';
+  return current.startsWith(href.replace(/\/$/, ''));
+}
+---
+
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <SEO title={title} description={description} type={type} pubDate={pubDate} />
+    <link rel="icon" href={`${import.meta.env.BASE_URL}favicon.svg`} type="image/svg+xml" />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="Krish Parajuli — Writeups"
+      href={`${import.meta.env.BASE_URL}rss.xml`}
+    />
+    <ThemeInit />
+    <script src={`${import.meta.env.BASE_URL}js/main.js`} defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">
+      Skip to content
+    </a>
+    <header class="site-header">
+      <nav class="nav" aria-label="Primary">
+        <a class="brand" href={`${import.meta.env.BASE_URL}`}>
+          krish:~$
+        </a>
+        <ul class="nav-links">
+          {links.map(([href, label]) => (
+            <li>
+              <a
+                href={`${import.meta.env.BASE_URL}${href.replace(/^\//, '')}`}
+                aria-current={active(href) ? 'page' : undefined}
+              >
+                {label}
+              </a>
+            </li>
+          ))}
+        </ul>
+        <button
+          id="theme-toggle"
+          class="btn btn-ghost no-print"
+          type="button"
+          aria-label="Toggle theme"
+        >
+          ◐
+        </button>
+      </nav>
+    </header>
+    <main id="main" class="wrap">
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <div class="wrap">
+        <p>© {new Date().getFullYear()} Krish Parajuli · Kathmandu, Nepal</p>
+        <p>
+          <a href="https://www.linkedin.com/in/krishparajuli">LinkedIn</a>
+          {' · '}
+          <a href="https://github.com/krishparajuli">GitHub</a>
+          {' · '}
+          <a href={`${import.meta.env.BASE_URL}rss.xml`}>RSS</a>
+          {' · '}
+          <a href={`${import.meta.env.BASE_URL}security/`}>Security of this site</a>
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>

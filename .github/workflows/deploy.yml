@@ -1,0 +1,174 @@
+name: deploy
+on:
+  workflow_run:
+    workflows: [ci]
+    types: [completed]
+    branches: [main]
+permissions:
+  contents: read
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false
+jobs:
+  build:
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      (github.event.workflow_run.event == 'push' || github.event.workflow_run.event == 'workflow_dispatch') &&
+      github.event.workflow_run.head_branch == 'main' &&
+      github.event.workflow_run.head_repository.full_name == github.repository
+    runs-on: [self-hosted, linux, debian]
+    timeout-minutes: 20
+    outputs:
+      cloudflare: ${{ steps.targets.outputs.cloudflare }}
+      vercel: ${{ steps.targets.outputs.vercel }}
+      netlify: ${{ steps.targets.outputs.netlify }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: npm run build && npm run check:links && npm run deploy:prepare && npm run test:portability
+        env:
+          SITE_URL: ${{ vars.SITE_URL || 'http://localhost:8080' }}
+          BASE_PATH: ${{ vars.BASE_PATH }}
+      - id: targets
+        env:
+          CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CF_ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CF_PROJECT: ${{ vars.CLOUDFLARE_PROJECT_NAME }}
+          VC_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VC_ORG: ${{ secrets.VERCEL_ORG_ID }}
+          VC_PROJECT: ${{ secrets.VERCEL_PROJECT_ID }}
+          NL_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NL_SITE: ${{ secrets.NETLIFY_SITE_ID }}
+          PUBLIC_SITE: ${{ vars.SITE_URL }}
+          PAGES: ${{ vars.ENABLE_GITHUB_PAGES }}
+        run: |
+          node --input-type=module <<'JS'
+          import { appendFileSync } from 'node:fs';
+          const e = process.env;
+          const targets = {
+            cloudflare: !!(e.CF_TOKEN && e.CF_ACCOUNT && e.CF_PROJECT),
+            vercel: !!(e.VC_TOKEN && e.VC_ORG && e.VC_PROJECT),
+            netlify: !!(e.NL_TOKEN && e.NL_SITE)
+          };
+          if ((Object.values(targets).some(Boolean) || e.PAGES === 'true') && !e.PUBLIC_SITE) {
+            throw new Error('Set the public SITE_URL repository variable before deploying.');
+          }
+          for (const [key, enabled] of Object.entries(targets)) {
+            appendFileSync(e.GITHUB_OUTPUT, `${key}=${enabled}\n`);
+          }
+          JS
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: static-site
+          include-hidden-files: true
+          path: |
+            dist/
+            deploy/generated/
+            deploy/docker/
+            deploy/vercel/.vercel/output/
+            deploy/README.md
+  debian:
+    needs: build
+    runs-on: [self-hosted, linux, debian]
+    timeout-minutes: 15
+    environment: production-debian
+    env:
+      DEPLOY_SHA: ${{ github.event.workflow_run.head_sha }}
+      BASE_PATH: ${{ vars.BASE_PATH }}
+      PROD_PORT: ${{ vars.PROD_PORT || '8080' }}
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          persist-credentials: false
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: static-site
+      - name: Build the runtime image from the validated artifact
+        run: docker compose -f deploy/self-hosted/compose.yml build
+      - name: Deploy and wait for a healthy website
+        run: docker compose -f deploy/self-hosted/compose.yml up -d --wait --wait-timeout 90
+      - name: Show deployment status
+        if: always()
+        run: |
+          docker compose -f deploy/self-hosted/compose.yml ps
+          docker compose -f deploy/self-hosted/compose.yml logs --tail=50
+  cloudflare:
+    needs: build
+    if: needs.build.outputs.cloudflare == 'true'
+    runs-on: [self-hosted, linux, debian]
+    environment: production-cloudflare
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: static-site
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - uses: cloudflare/wrangler-action@9acf94ace14e7dc412b076f2c5c20b8ce93c79cd
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: '4.145.0'
+          command: pages deploy deploy/generated/publish --project-name=${{ vars.CLOUDFLARE_PROJECT_NAME }} --branch=main
+  vercel:
+    needs: build
+    if: needs.build.outputs.vercel == 'true'
+    runs-on: [self-hosted, linux, debian]
+    environment: production-vercel
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: static-site
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - run: npx --yes vercel@62.0.0 deploy --prebuilt --prod --yes --token "$VERCEL_TOKEN"
+        working-directory: deploy/vercel
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+  netlify:
+    needs: build
+    if: needs.build.outputs.netlify == 'true'
+    runs-on: [self-hosted, linux, debian]
+    environment: production-netlify
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: static-site
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - run: npx --yes netlify-cli@27.10.2 deploy --dir deploy/generated/publish --prod --no-build
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+  github-pages:
+    needs: build
+    if: vars.ENABLE_GITHUB_PAGES == 'true'
+    runs-on: [self-hosted, linux, debian]
+    environment:
+      name: github-pages
+      url: ${{ steps.publish.outputs.page_url }}
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: static-site
+      - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa
+        with:
+          path: dist
+      - uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e
+        id: publish

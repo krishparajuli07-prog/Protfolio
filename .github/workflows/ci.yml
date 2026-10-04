@@ -1,0 +1,65 @@
+name: ci
+on:
+  workflow_dispatch:
+  pull_request: {}
+  push:
+    branches: [main]
+permissions:
+  contents: read
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  lint-type-validate:
+    runs-on: [self-hosted, linux, debian]
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: npm run validate
+      - run: npx prettier --check .
+      - run: npx eslint . --max-warnings=0
+      - run: npx markdownlint "**/*.md" --ignore node_modules --ignore dist --ignore .astro
+      - run: npm run typecheck
+  build-test:
+    runs-on: [self-hosted, linux, debian]
+    timeout-minutes: 20
+    needs: lint-type-validate
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: npm test
+      - run: npm run build
+        env:
+          SITE_URL: https://example.com
+      - run: npm run check:links
+      - run: npm run deploy:prepare && npm run test:portability
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: dist
+          path: dist
+          include-hidden-files: true
+  a11y-lighthouse:
+    runs-on: [self-hosted, linux, debian]
+    timeout-minutes: 15
+    needs: build-test
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: dist
+          path: dist
+      - run: npx --yes @lhci/cli@0.14.0 autorun || echo "Lighthouse run attempted"

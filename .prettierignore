@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.astro/
+package-lock.json
+deploy/generated/
+deploy/vercel/.vercel/
+deploy/vercel/vercel.json
+deploy/docker/headers.conf
+deploy/docker/headers.caddy
+deploy/cloudflare/_headers
+deploy/netlify/_headers
