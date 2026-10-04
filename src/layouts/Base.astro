@@ -12,7 +12,8 @@ interface Props {
   pubDate?: string;
 }
 const { title, description, type = 'website', pubDate } = Astro.props;
-const current = Astro.url.pathname;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const current = Astro.url.pathname.slice(base.length) || '/';
 const links = [
   ['/', 'Home'],
   ['/about/', 'About'],
@@ -85,7 +86,7 @@ function active(href: string): boolean {
         <p>
           <a href="https://www.linkedin.com/in/krishparajuli">LinkedIn</a>
           {' · '}
-          <a href="https://github.com/krishparajuli">GitHub</a>
+          <a href="https://github.com/krishparajuli07-prog">GitHub</a>
           {' · '}
           <a href={`${import.meta.env.BASE_URL}rss.xml`}>RSS</a>
           {' · '}

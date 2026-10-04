@@ -64,6 +64,7 @@ try {
       <p>
         <span class="pill">Open to internships / junior roles</span>
       </p>
+      <p class="eyebrow">Cybersecurity portfolio · Kathmandu, Nepal</p>
       <h1>
         Hi, I'm Krish
         <span class="cursor" aria-hidden="true">
@@ -88,7 +89,7 @@ try {
       <p>
         <a href="https://www.linkedin.com/in/krishparajuli">LinkedIn</a>
         {' · '}
-        <a href="https://github.com/krishparajuli">GitHub</a>
+        <a href="https://github.com/krishparajuli07-prog">GitHub</a>
         {' · '}
         <a href="https://tryhackme.com">TryHackMe</a>
       </p>
@@ -168,7 +169,8 @@ try {
         <ul>
           {certs.slice(0, 4).map((c: any) => (
             <li>
-              {c.title} — {c.issuer} <span class="badge complete">{c.status}</span>
+              {c.title} — {c.issuer}{' '}
+              <span class={`badge ${c.status.toLowerCase()}`}>{c.status}</span>
             </li>
           ))}
         </ul>
@@ -271,8 +273,8 @@ try {
   <section class="fade-in" aria-labelledby="cta-h">
     <h2 id="cta-h">Let's work together</h2>
     <p>
-      <a class="btn btn-primary" href="mailto:krish.parajuli@example.com">
-        krish [at] example [dot] com
+      <a class="btn btn-primary" href={`${import.meta.env.BASE_URL}contact/`}>
+        Let’s connect
       </a>{' '}
       <a class="btn btn-ghost" href="https://www.linkedin.com/in/krishparajuli">
         LinkedIn

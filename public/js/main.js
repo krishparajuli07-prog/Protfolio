@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('print-resume')?.addEventListener('click', () => window.print());
+
   // Persisted theme toggle (progressive enhancement; site works without JS).
   const btn = document.getElementById('theme-toggle');
   const root = document.documentElement;
@@ -50,21 +52,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 30);
     });
   }
-
-  // Fade-in on scroll.
-  const io =
-    'IntersectionObserver' in window
-      ? new IntersectionObserver(
-          (entries) =>
-            entries.forEach((e) => e.isIntersecting && e.target.classList.add('visible')),
-          { threshold: 0.1 }
-        )
-      : null;
-  document.querySelectorAll('.fade-in').forEach((el) => {
-    if (reduce) el.classList.add('visible');
-    else if (io) io.observe(el);
-    else el.classList.add('visible');
-  });
 
   // Project tag filter (progressive enhancement).
   const filter = document.getElementById('project-filter');
