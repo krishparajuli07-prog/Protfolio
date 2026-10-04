@@ -2,17 +2,11 @@
 import Base from '../layouts/Base.astro';
 ---
 
-<Base
-  title="Resume — Krish Parajuli"
-  description="Downloadable PDF and print-friendly HTML resume."
->
+<Base title="Resume — Krish Parajuli" description="Print-friendly resume for Krish Parajuli.">
   <h1>Resume</h1>
   <p>
-    <a class="btn btn-primary" href={`${import.meta.env.BASE_URL}resume.pdf`}>
-      Download PDF
-    </a>{' '}
-    <button class="btn btn-ghost no-print" type="button" onclick="window.print()">
-      Print
+    <button class="btn btn-ghost no-print" type="button" id="print-resume">
+      Print / save as PDF
     </button>
   </p>
   <div class="card">
