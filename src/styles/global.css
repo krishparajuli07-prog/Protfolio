@@ -259,14 +259,14 @@ footer.site-footer {
   padding: 2rem 0;
   color: var(--muted);
 }
-.fade-in {
+.scroll-animations .fade-in {
   opacity: 0;
   transform: translateY(8px);
   transition:
     opacity 0.5s ease,
     transform 0.5s ease;
 }
-.fade-in.visible {
+.scroll-animations .fade-in.visible {
   opacity: 1;
   transform: none;
 }

@@ -2,14 +2,10 @@
 import { readFile } from 'node:fs/promises';
 import Base from '../layouts/Base.astro';
 let education: any[] = [];
-let skills: any[] = [];
 try {
   education = JSON.parse(
     await readFile(new URL('../data/education.json', import.meta.url), 'utf8')
   );
-} catch {}
-try {
-  skills = JSON.parse(await readFile(new URL('../data/skills.json', import.meta.url), 'utf8'));
 } catch {}
 ---
 

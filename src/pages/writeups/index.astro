@@ -16,10 +16,10 @@ const posts = (await getCollection('writeups', ({ data }) => !data.draft)).sort(
     {posts.map((w) => (
       <article class="card">
         <h2>
-          <a href={`${import.meta.env.BASE_URL}writeups/${w.slug}/`}>{w.data.title}</a>
+          <a href={`${import.meta.env.BASE_URL}writeups/${w.id}/`}>{w.data.title}</a>
         </h2>
         <p>
-          {w.data.pubDate.toISOString().slice(0, 10)} · {readingTime(w.body)} min read
+          {w.data.pubDate.toISOString().slice(0, 10)} · {readingTime(w.body ?? '')} min read
         </p>
         <ul class="tags">
           {w.data.tags.map((t) => (

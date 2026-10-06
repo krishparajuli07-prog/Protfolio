@@ -13,7 +13,7 @@ export async function GET(context: { site?: URL }) {
       title: p.data.title,
       description: p.data.description,
       pubDate: p.data.pubDate,
-      link: `${import.meta.env.BASE_URL}writeups/${p.slug}/`
+      link: `${import.meta.env.BASE_URL}writeups/${p.id}/`
     }))
   });
 }

@@ -1,4 +1,4 @@
-FROM nginxinc/nginx-unprivileged:1.27.3-alpine3.20@sha256:9e7238f579a54582263a960d1b0094b4a3ecce641342eda3f8e2ff82b1703d2b
+FROM nginxinc/nginx-unprivileged:stable-alpine@sha256:15c994d10d6d78658721c3bcafff14cb281fba2a4bdf9d5ba92c416a472516e3
 ARG BASE_PATH=
 COPY dist/ /usr/share/nginx/html${BASE_PATH}/
 COPY deploy/generated/nginx.conf /etc/nginx/conf.d/default.conf

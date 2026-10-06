@@ -7,36 +7,53 @@ on:
 permissions:
   contents: read
   packages: write
-  id-token: write
-  security-events: write
 concurrency:
   group: docker-${{ github.ref }}
   cancel-in-progress: true
 jobs:
   build-scan-push:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-      - uses: docker/setup-buildx-action@b5b09c94d454774d7b336f4757c22013e33c772e # v3.10.0
-      - uses: docker/login-action@9780b0c442871985fe678a92e2d967f0a342cdd7 # v3.3.0
+      - uses: docker/setup-buildx-action@b5ca514318bd6ebac0fb2aedd5d36ec1b5c232a2 # v3.10.0
+      - uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3.3.0
         if: github.event_name != 'pull_request'
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - uses: docker/metadata-action@44871f13473b7a99def6c15a1caba5dcd556817 # v5.5.1
+      - uses: docker/metadata-action@8e5442c4ef9f78752691e2d8f8d19755c6f78e81 # v5.5.1
         id: meta
         with:
           images: ghcr.io/${{ github.repository }}
-          tags: type=semver,pattern={{version}} | type=ref,event=branch | type=sha
-      - uses: docker/build-push-action@263435318d21b8e153c867a45ae5e29140b0f7 # v6.18.0
+          tags: |
+            type=semver,pattern={{version}}
+            type=ref,event=branch
+            type=sha
+      - uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
         with:
           context: .
-          push: ${{ github.event_name != 'pull_request' }}
+          load: true
+          push: false
+          tags: portfolio:ci
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: SITE_URL=https://krishparajuli.com.np
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - uses: aquasecurity/trivy-action@18f2510ee396bbf400402947b394f2dd8c87dbb0 # v0.29.0
+        with:
+          image-ref: portfolio:ci
+          severity: HIGH,CRITICAL
+          exit-code: 1
+          ignore-unfixed: true
+      - name: Publish the scanned image
+        if: github.event_name != 'pull_request'
+        uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
+        with:
+          context: .
+          push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          build-args: SITE_URL=https://example.com
-      - uses: aquasecurity/trivy-action@dc5a429b52fcf669ce959baa2c2d260d6366a5f # 0.29.0
-        with:
-          image-ref: ghcr.io/${{ github.repository }}:main
-          severity: HIGH,CRITICAL
+          build-args: SITE_URL=https://krishparajuli.com.np
+          cache-from: type=gha

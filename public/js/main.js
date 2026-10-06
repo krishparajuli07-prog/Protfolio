@@ -16,6 +16,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  document.querySelector('[data-print-resume]')?.addEventListener('click', () => window.print());
+
   // Typing effect for $ whoami card — skipped under reduced motion.
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const typed = document.querySelector('[data-typed]');
@@ -50,6 +52,9 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 30);
     });
   }
+
+  // Only hide sections when scroll animations can reveal them.
+  if (!reduce && 'IntersectionObserver' in window) root.classList.add('scroll-animations');
 
   // Fade-in on scroll.
   const io =

@@ -1,14 +1,14 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import { readingTime } from '../../utils/site';
 import Base from '../../layouts/Base.astro';
 export async function getStaticPaths() {
   const posts = await getCollection('writeups', ({ data }) => !data.draft);
-  return posts.map((w) => ({ params: { slug: w.slug }, props: { w } }));
+  return posts.map((w) => ({ params: { slug: w.id }, props: { w } }));
 }
 const { w } = Astro.props;
-const { Content, headings } = await w.render();
-const mins = readingTime(w.body);
+const { Content, headings } = await render(w);
+const mins = readingTime(w.body ?? '');
 ---
 
 <Base

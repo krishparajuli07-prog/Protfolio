@@ -42,10 +42,10 @@ Project and certification totals are rendered at build time.
 
 See [deploy/README.md](deploy/README.md) for exact commands and optional secrets.
 
-GitHub CI/CD runs on the self-hosted runner labeled `debian`. Successful CI on
-`main` deploys to Docker on that server (port `8080` by default). See the
-[Debian runner setup](deploy/README.md#github-cicd-on-debian) for prerequisites
-and repository variables.
+GitHub CI checks run on GitHub-hosted runners. Debian deployment is optional:
+set `ENABLE_DEBIAN_DEPLOY=true` only when your production runner is available.
+Successful CI packages the site; configured hosting targets publish that artifact.
+See [deployment setup](deploy/README.md) for repository variables and secrets.
 
 ```sh
 npm ci
