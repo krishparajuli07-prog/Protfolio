@@ -1,5 +1,6 @@
 name: release
 on:
+  workflow_dispatch:
   push:
     branches: [main]
 permissions:
@@ -7,6 +8,7 @@ permissions:
   pull-requests: write
 jobs:
   release-please:
+    if: vars.ENABLE_RELEASE_AUTOMATION == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: googleapis/release-please-action@5c625bfb5d1ff62eadeeb3772007f7f66fdcf071 # v4

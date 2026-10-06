@@ -46,6 +46,9 @@ GitHub CI checks run on GitHub-hosted runners. Debian deployment is optional:
 set `ENABLE_DEBIAN_DEPLOY=true` only when your production runner is available.
 Successful CI packages the site; configured hosting targets publish that artifact.
 See [deployment setup](deploy/README.md) for repository variables and secrets.
+Release automation is optional: set `ENABLE_RELEASE_AUTOMATION=true` and allow
+GitHub Actions to create pull requests in the repository's Actions settings
+before using the release workflow.
 
 ```sh
 npm ci
