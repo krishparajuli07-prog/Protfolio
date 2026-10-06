@@ -2,7 +2,7 @@
   "name": "krish-parajuli-portfolio",
   "version": "1.0.0",
   "private": true,
-  "description": "Static portfolio for Krish Parajuli \u2014 BSc Ethical Hacking & Cyber Security student.",
+  "description": "Static portfolio for Krish Parajuli — BSc Ethical Hacking & Cyber Security student.",
   "type": "module",
   "engines": {
     "node": ">=22.12.0 <25"
