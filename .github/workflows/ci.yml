@@ -26,6 +26,8 @@ jobs:
       - run: npx markdownlint "**/*.md" --ignore node_modules --ignore dist --ignore .astro
       - run: npm run typecheck
   build-test:
+    env:
+      SITE_URL: https://krishparajuli.com.np
     runs-on: ubuntu-latest
     timeout-minutes: 20
     needs: lint-type-validate
@@ -38,8 +40,6 @@ jobs:
       - run: npm ci --no-audit --no-fund
       - run: npm test
       - run: npm run build
-        env:
-          SITE_URL: https://example.com
       - run: npm run check:links
       - run: npm run deploy:prepare && npm run test:portability
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
