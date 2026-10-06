@@ -5,7 +5,7 @@
   "description": "Static portfolio for Krish Parajuli \u2014 BSc Ethical Hacking & Cyber Security student.",
   "type": "module",
   "engines": {
-    "node": ">=22.12.0 <25"
+    "node": "^22.22.2 || ^24.15.0"
   },
   "scripts": {
     "dev": "astro dev",

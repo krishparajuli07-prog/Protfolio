@@ -69,21 +69,25 @@ headers. No Node runtime is required to serve the finished website.
 
 ## GitHub CI/CD on Debian
 
-All workflow jobs run on `[self-hosted, linux, debian]`. In this repository's
+Validation, security checks and artifact preparation run on GitHub-hosted runners.
+Only the optional Debian publishing job uses `[self-hosted, linux, debian]`.
+Set `ENABLE_DEBIAN_DEPLOY=true` to enable it. In this repository's
 **Settings → Actions → Runners**, register your Debian runner and add the custom
 label `debian`. The runner name alone does not select it. Keep this label unique
 to the deployment machine, and install the runner as a service.
 
 The runner needs Git, Docker Engine with the Compose v2 and Buildx plugins, and
 permission for its service user to run Docker. `actions/setup-node` installs the
-Node version from `.nvmrc`. Chromium/Chrome is needed for the existing advisory
-Lighthouse step. Configure public `SITE_URL`, optional `BASE_PATH`, and optional
+Node version from `.nvmrc`. Node 24 Actions require runner version 2.327.1 or
+newer. Lighthouse is a required CI check on a GitHub-hosted runner.
+Configure public HTTPS `SITE_URL`, optional `BASE_PATH`, and optional
 `PROD_PORT` (default `8080`) under **Settings → Secrets and variables → Actions →
-Variables**. Without `SITE_URL`, the Debian deployment uses `http://localhost:8080`.
+Variables**. All enabled deployment targets require `SITE_URL`.
 
 Push to `main` to run validation, linting, type checks, tests, build and link checks.
 After `ci` succeeds, `deploy.yml` checks out that exact commit, builds and validates
-the production artifact, and deploys it to Docker on the Debian runner. Pull
+the production artifact, and publishes it to the configured hosts. Docker
+deployment on the Debian runner runs only when explicitly enabled. Pull
 requests only run CI. To deploy manually, run the **ci** workflow on **main**;
 deployment still requires successful CI.
 
@@ -105,7 +109,10 @@ docker compose -f deploy/self-hosted/compose.yml up -d --wait --wait-timeout 90
 ## Optional managed-host deployments
 
 The deployment workflow also publishes the same artifact to configured managed
-hosts. Without their credentials, these additional jobs are skipped.
+hosts. Unconfigured hosts are skipped. If no host is configured, the workflow
+fails before building and explains the missing setup in its summary. A green
+artifact build alone is not a deployment. Partial host credentials also fail
+preflight rather than silently skipping that host.
 
 Set repository variables `SITE_URL` and optional `BASE_PATH`. Set only the
 credentials for the hosts you choose (repository secrets are used for detection):
