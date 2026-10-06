@@ -47,8 +47,9 @@ See [deploy/README.md](deploy/README.md) for exact commands and optional secrets
 GitHub CI checks run on GitHub-hosted runners. Debian deployment is optional:
 set `ENABLE_DEBIAN_DEPLOY=true` only when your production runner is available.
 Successful CI packages the site; configured hosting targets publish that artifact.
-Deployment fails clearly if no target is configured; add hosting credentials or
-explicitly enable a supported target before expecting the website to update.
+Without a configured hosting target, deployment reports that publishing is
+disabled and skips publishing jobs. Add hosting credentials or explicitly enable
+a supported target before expecting the website to update.
 See [deployment setup](deploy/README.md) for repository variables and secrets.
 Release automation is optional: set `ENABLE_RELEASE_AUTOMATION=true` and allow
 GitHub Actions to create pull requests in the repository's Actions settings

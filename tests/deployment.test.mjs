@@ -1,10 +1,31 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { deploymentTargets } from '../scripts/deployment-targets.mjs';
+import { mkdtemp, readFile, rm } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { spawnSync } from 'node:child_process';
 
-test('deployment cannot succeed without a publishing target', () => {
-  assert.throws(() => deploymentTargets({}), /No deployment target/);
+test('unconfigured hosting disables publishing while partial configuration fails', () => {
+  assert.ok(Object.values(deploymentTargets({})).every((enabled) => !enabled));
   assert.throws(() => deploymentTargets({ CF_TOKEN: 'test-token' }), /Incomplete cloudflare/);
+});
+
+test('unconfigured workflow reports disabled deployment and exits successfully', async () => {
+  const directory = await mkdtemp(join(tmpdir(), 'portfolio-deploy-'));
+  try {
+    const output = join(directory, 'output');
+    const summary = join(directory, 'summary');
+    const result = spawnSync(process.execPath, ['scripts/deployment-targets.mjs'], {
+      env: { GITHUB_OUTPUT: output, GITHUB_STEP_SUMMARY: summary },
+      encoding: 'utf8'
+    });
+    assert.equal(result.status, 0, result.stderr);
+    assert.match(await readFile(output, 'utf8'), /enabled=false/);
+    assert.match(await readFile(summary, 'utf8'), /website was not deployed/);
+  } finally {
+    await rm(directory, { recursive: true, force: true });
+  }
 });
 
 test('configured deployment requires a public HTTPS origin', () => {

@@ -18,9 +18,7 @@ export function deploymentTargets(env) {
   targets.pages = env.PAGES === 'true';
   targets.debian = env.DEBIAN === 'true';
   if (!Object.values(targets).some(Boolean)) {
-    throw new Error(
-      'No deployment target configured. Set hosting credentials or enable GitHub Pages or Debian. See deploy/README.md.'
-    );
+    return targets;
   }
   let origin;
   try {
@@ -45,14 +43,18 @@ export function deploymentTargets(env) {
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   try {
     const targets = deploymentTargets(process.env);
+    const enabled = Object.values(targets).some(Boolean);
+    appendFileSync(process.env.GITHUB_OUTPUT, `enabled=${enabled}\n`);
     for (const [host, enabled] of Object.entries(targets)) {
       appendFileSync(process.env.GITHUB_OUTPUT, `${host}=${enabled}\n`);
     }
     appendFileSync(
       process.env.GITHUB_STEP_SUMMARY,
-      `Configured deployment targets: ${Object.keys(targets)
-        .filter((host) => targets[host])
-        .join(', ')}.\n`
+      enabled
+        ? `Configured deployment targets: ${Object.keys(targets)
+            .filter((host) => targets[host])
+            .join(', ')}.\n`
+        : 'Deployment disabled: no hosting target configured. Publishing jobs are skipped; the website was not deployed. See deploy/README.md for setup.\n'
     );
   } catch (error) {
     appendFileSync(process.env.GITHUB_STEP_SUMMARY, `Deployment blocked: ${error.message}\n`);

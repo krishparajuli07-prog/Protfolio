@@ -10,7 +10,7 @@ concurrency:
   group: production-deploy
   cancel-in-progress: false
 jobs:
-  build:
+  configuration:
     if: >-
       github.event.workflow_run.conclusion == 'success' &&
       (github.event.workflow_run.event == 'push' || github.event.workflow_run.event == 'workflow_dispatch') &&
@@ -19,6 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     outputs:
+      enabled: ${{ steps.targets.outputs.enabled }}
       cloudflare: ${{ steps.targets.outputs.cloudflare }}
       vercel: ${{ steps.targets.outputs.vercel }}
       netlify: ${{ steps.targets.outputs.netlify }}
@@ -47,6 +48,20 @@ jobs:
           PAGES: ${{ vars.ENABLE_GITHUB_PAGES }}
           DEBIAN: ${{ vars.ENABLE_DEBIAN_DEPLOY }}
         run: node scripts/deployment-targets.mjs
+  build:
+    needs: configuration
+    if: needs.configuration.outputs.enabled == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
       - run: npm ci --no-audit --no-fund
       - run: npm run build && npm run check:links && npm run deploy:prepare && npm run test:portability
         env:
@@ -63,8 +78,8 @@ jobs:
             deploy/vercel/.vercel/output/
             deploy/README.md
   debian:
-    needs: build
-    if: needs.build.outputs.debian == 'true'
+    needs: [configuration, build]
+    if: needs.configuration.outputs.debian == 'true'
     runs-on: [self-hosted, linux, debian]
     timeout-minutes: 15
     environment: production-debian
@@ -90,8 +105,8 @@ jobs:
           docker compose -f deploy/self-hosted/compose.yml ps
           docker compose -f deploy/self-hosted/compose.yml logs --tail=50
   cloudflare:
-    needs: build
-    if: needs.build.outputs.cloudflare == 'true'
+    needs: [configuration, build]
+    if: needs.configuration.outputs.cloudflare == 'true'
     runs-on: ubuntu-latest
     environment: production-cloudflare
     steps:
@@ -108,8 +123,8 @@ jobs:
           wranglerVersion: '4.145.0'
           command: pages deploy deploy/generated/publish --project-name=${{ vars.CLOUDFLARE_PROJECT_NAME }} --branch=main
   vercel:
-    needs: build
-    if: needs.build.outputs.vercel == 'true'
+    needs: [configuration, build]
+    if: needs.configuration.outputs.vercel == 'true'
     runs-on: ubuntu-latest
     environment: production-vercel
     steps:
@@ -126,8 +141,8 @@ jobs:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
   netlify:
-    needs: build
-    if: needs.build.outputs.netlify == 'true'
+    needs: [configuration, build]
+    if: needs.configuration.outputs.netlify == 'true'
     runs-on: ubuntu-latest
     environment: production-netlify
     steps:
@@ -142,8 +157,8 @@ jobs:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
   github-pages:
-    needs: build
-    if: needs.build.outputs.pages == 'true'
+    needs: [configuration, build]
+    if: needs.configuration.outputs.pages == 'true'
     runs-on: ubuntu-latest
     environment:
       name: github-pages

@@ -109,10 +109,11 @@ docker compose -f deploy/self-hosted/compose.yml up -d --wait --wait-timeout 90
 ## Optional managed-host deployments
 
 The deployment workflow also publishes the same artifact to configured managed
-hosts. Unconfigured hosts are skipped. If no host is configured, the workflow
-fails before building and explains the missing setup in its summary. A green
-artifact build alone is not a deployment. Partial host credentials also fail
-preflight rather than silently skipping that host.
+hosts. Unconfigured hosts are skipped. If no host is configured, the configuration
+job reports "Deployment disabled" and skips the production build and all
+publishing jobs without raising a failure alert. Its summary explicitly says
+that the website was not deployed. Partial host credentials, invalid public
+URLs and actual publishing errors still fail the workflow.
 
 Set repository variables `SITE_URL` and optional `BASE_PATH`. Set only the
 credentials for the hosts you choose (repository secrets are used for detection):
