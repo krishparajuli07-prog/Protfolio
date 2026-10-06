@@ -14,7 +14,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   build-scan-push:
-    runs-on: [self-hosted, linux, debian]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - uses: docker/setup-buildx-action@b5b09c94d454774d7b336f4757c22013e33c772e # v3.10.0

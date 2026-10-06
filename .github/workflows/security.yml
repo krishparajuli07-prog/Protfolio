@@ -9,7 +9,7 @@ permissions:
   contents: read
 jobs:
   secrets-audit:
-    runs-on: [self-hosted, linux, debian]
+    runs-on: ubuntu-latest
     permissions:
       contents: read
     steps:
@@ -31,7 +31,7 @@ jobs:
           scan-ref: .
           severity: HIGH,CRITICAL
   codeql:
-    runs-on: [self-hosted, linux, debian]
+    runs-on: ubuntu-latest
     permissions:
       security-events: write
       actions: read
@@ -43,7 +43,7 @@ jobs:
           languages: javascript-typescript
       - uses: github/codeql-action/analyze@949a3d2f368b033cf7659bc2aec3c0b0dc7ffd9e5 # v3.28.0
   scorecard:
-    runs-on: [self-hosted, linux, debian]
+    runs-on: ubuntu-latest
     permissions:
       security-events: write
       id-token: write

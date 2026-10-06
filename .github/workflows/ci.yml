@@ -11,7 +11,7 @@ concurrency:
   cancel-in-progress: true
 jobs:
   lint-type-validate:
-    runs-on: [self-hosted, linux, debian]
+    runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -26,7 +26,7 @@ jobs:
       - run: npx markdownlint "**/*.md" --ignore node_modules --ignore dist --ignore .astro
       - run: npm run typecheck
   build-test:
-    runs-on: [self-hosted, linux, debian]
+    runs-on: ubuntu-latest
     timeout-minutes: 20
     needs: lint-type-validate
     steps:
@@ -48,7 +48,7 @@ jobs:
           path: dist
           include-hidden-files: true
   a11y-lighthouse:
-    runs-on: [self-hosted, linux, debian]
+    runs-on: ubuntu-latest
     timeout-minutes: 15
     needs: build-test
     steps:

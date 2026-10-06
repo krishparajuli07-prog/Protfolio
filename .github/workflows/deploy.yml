@@ -16,7 +16,7 @@ jobs:
       (github.event.workflow_run.event == 'push' || github.event.workflow_run.event == 'workflow_dispatch') &&
       github.event.workflow_run.head_branch == 'main' &&
       github.event.workflow_run.head_repository.full_name == github.repository
-    runs-on: [self-hosted, linux, debian]
+    runs-on: ubuntu-latest
     timeout-minutes: 20
     outputs:
       cloudflare: ${{ steps.targets.outputs.cloudflare }}
@@ -34,7 +34,7 @@ jobs:
       - run: npm ci --no-audit --no-fund
       - run: npm run build && npm run check:links && npm run deploy:prepare && npm run test:portability
         env:
-          SITE_URL: ${{ vars.SITE_URL || 'http://localhost:8080' }}
+          SITE_URL: ${{ vars.SITE_URL || 'https://krishparajuli.com.np' }}
           BASE_PATH: ${{ vars.BASE_PATH }}
       - id: targets
         env:
@@ -76,6 +76,7 @@ jobs:
             deploy/README.md
   debian:
     needs: build
+    if: vars.ENABLE_DEBIAN_DEPLOY == 'true'
     runs-on: [self-hosted, linux, debian]
     timeout-minutes: 15
     environment: production-debian
@@ -103,7 +104,7 @@ jobs:
   cloudflare:
     needs: build
     if: needs.build.outputs.cloudflare == 'true'
-    runs-on: [self-hosted, linux, debian]
+    runs-on: ubuntu-latest
     environment: production-cloudflare
     steps:
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
@@ -121,7 +122,7 @@ jobs:
   vercel:
     needs: build
     if: needs.build.outputs.vercel == 'true'
-    runs-on: [self-hosted, linux, debian]
+    runs-on: ubuntu-latest
     environment: production-vercel
     steps:
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
@@ -139,7 +140,7 @@ jobs:
   netlify:
     needs: build
     if: needs.build.outputs.netlify == 'true'
-    runs-on: [self-hosted, linux, debian]
+    runs-on: ubuntu-latest
     environment: production-netlify
     steps:
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
@@ -155,7 +156,7 @@ jobs:
   github-pages:
     needs: build
     if: vars.ENABLE_GITHUB_PAGES == 'true'
-    runs-on: [self-hosted, linux, debian]
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.publish.outputs.page_url }}

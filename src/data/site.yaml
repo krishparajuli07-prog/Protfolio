@@ -5,10 +5,10 @@ tagline: Enumerate. Exploit. Validate. Report. Remediate.
 location: Kathmandu, Nepal
 openToWork: true
 openToWorkLabel: Open to internships / junior roles
-emailObfuscated: krish [at] example [dot] com
-emailHref: mailto:krish.parajuli@example.com
+emailObfuscated: hello@krishparajuli.com.np
+emailHref: mailto:hello@krishparajuli.com.np
 linkedin: https://www.linkedin.com/in/krishparajuli
-github: https://github.com/krishparajuli
+github: https://github.com/krishparajuli07-prog
 # Privacy-friendly analytics, off by default. Set enabled: true + scriptSrc to enable.
 analytics:
   enabled: false

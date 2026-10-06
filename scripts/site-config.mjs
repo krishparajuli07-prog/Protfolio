@@ -9,7 +9,7 @@ try {
 }
 
 export function siteConfig(env = process.env) {
-  const site = new URL(env.SITE_URL || 'http://localhost:4321');
+  const site = new URL(env.SITE_URL || 'https://krishparajuli.com.np');
   if (
     !['http:', 'https:'].includes(site.protocol) ||
     site.pathname !== '/' ||

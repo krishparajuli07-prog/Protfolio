@@ -1,32 +1,28 @@
 ---
 import Base from '../layouts/Base.astro';
+const site = {
+  emailHref: 'mailto:hello@krishparajuli.com.np',
+  emailObfuscated: 'hello@krishparajuli.com.np',
+  linkedin: 'https://www.linkedin.com/in/krishparajuli',
+  github: 'https://github.com/krishparajuli07-prog'
+};
 ---
 
 <Base
   title="Contact — Krish Parajuli"
-  description="Mailto and social links only. No backend forms."
+  description="Get in touch about internships, junior roles and projects."
 >
   <h1>Contact</h1>
-  <p>No forms, no trackers — just direct links.</p>
+  <p>Get in touch about internships, junior roles and projects.</p>
   <ul>
     <li>
-      Email: <a href="mailto:krish.parajuli@example.com">krish [at] example [dot] com</a>{' '}
-      (obfuscated against scrapers; click to compose)
+      Email: <a href={site.emailHref}>{site.emailObfuscated}</a>
     </li>
     <li>
-      LinkedIn:{' '}
-      <a href="https://www.linkedin.com/in/krishparajuli">linkedin.com/in/krishparajuli</a>
+      LinkedIn: <a href={site.linkedin}>linkedin.com/in/krishparajuli</a>
     </li>
     <li>
-      GitHub: <a href="https://github.com/krishparajuli">github.com/krishparajuli</a>
+      GitHub: <a href={site.github}>github.com/krishparajuli07-prog</a>
     </li>
   </ul>
-  <h2>PGP (optional)</h2>
-  <p>
-    <small>Add your public key block below when ready. Fingerprint field is a placeholder.</small>
-  </p>
-  <pre>Fingerprint: XXXX XXXX XXXX XXXX (replace me)
------BEGIN PGP PUBLIC KEY BLOCK-----
-[add key here — optional]
------END PGP PUBLIC KEY BLOCK-----</pre>
 </Base>
