@@ -14,6 +14,9 @@ ENV SITE_URL=${SITE_URL} BASE_PATH=${BASE_PATH}
 RUN npm run build
 
 FROM nginxinc/nginx-unprivileged:${NGINX_TAG}@sha256:15c994d10d6d78658721c3bcafff14cb281fba2a4bdf9d5ba92c416a472516e3 AS runtime
+# Patch the pinned base: CVE-2026-4775 is fixed in tiff 4.7.2-r0.
+USER root
+RUN apk add --no-cache --upgrade 'tiff>=4.7.2-r0'
 ARG BASE_PATH=
 COPY --from=build /app/dist /usr/share/nginx/html${BASE_PATH}/
 COPY --from=build /app/deploy/generated/nginx.conf /etc/nginx/conf.d/default.conf

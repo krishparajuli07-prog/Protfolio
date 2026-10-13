@@ -9,7 +9,7 @@ docker compose --profile prod up --build
 Serve an existing build without rebuilding the website:
 
 ```sh
-docker compose --profile static up -d --wait
+docker compose --profile static up --build -d --wait
 ```
 
 Or use Caddy on the same artifact:

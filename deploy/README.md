@@ -51,7 +51,7 @@ a header-capable hosting layer. There is no meta-tag substitute for these header
 After building, serve the existing artifact with either runtime:
 
 ```sh
-docker compose --profile static up -d --wait
+docker compose --profile static up --build -d --wait
 docker compose --profile static down
 docker compose --profile caddy up --build -d --wait
 docker compose --profile caddy down
