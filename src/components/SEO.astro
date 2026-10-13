@@ -1,4 +1,5 @@
 ---
+import { serializeJson } from '../utils/serialize-json';
 // SEO head: canonical, OG/Twitter cards (auto-generated per page at build time), JSON-LD.
 interface Props {
   title: string;
@@ -30,7 +31,7 @@ const canonical = url;
 <meta name="twitter:image" content={ogImage} />
 <script
   type="application/ld+json"
-  set:html={JSON.stringify(
+  set:html={serializeJson(
     type === 'article'
       ? {
           '@context': 'https://schema.org',

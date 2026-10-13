@@ -3,6 +3,17 @@ dist/
 .astro/
 .env
 .env.production
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.sqlite
+*.sqlite3
+*.db
+*.sql
+*.bak
 .DS_Store
 *.log
 coverage/

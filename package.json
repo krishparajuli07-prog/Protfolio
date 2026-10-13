@@ -9,7 +9,7 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build && node ./scripts/generate-sitemap.mjs && node ./scripts/generate-headers.mjs && node ./scripts/validate-content.mjs",
+    "build": "astro build && node ./scripts/generate-sitemap.mjs && node ./scripts/generate-headers.mjs && node ./scripts/validate-content.mjs && node ./scripts/check-public-files.mjs",
     "preview": "astro preview",
     "headers": "node ./scripts/generate-headers.mjs && node ./scripts/generate-sitemap.mjs",
     "stats:build": "node ./scripts/build-stats.mjs",

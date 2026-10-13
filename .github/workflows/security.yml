@@ -31,6 +31,8 @@ jobs:
           scan-type: fs
           scan-ref: .
           severity: HIGH,CRITICAL
+          exit-code: 1
+          ignore-unfixed: true
   codeql:
     runs-on: ubuntu-latest
     permissions:
