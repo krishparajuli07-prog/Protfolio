@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto';
 import { readFile, writeFile, mkdir, readdir } from 'node:fs/promises';
+import { inlineScripts } from './html-scripts.mjs';
 import { siteConfig } from './site-config.mjs';
 
 // Read the built bytes, so formatting changes and JSON-LD are covered too.
@@ -10,12 +11,8 @@ async function collect(dir) {
     if (entry.isDirectory()) await collect(path);
     else if (entry.name.endsWith('.html')) {
       const html = await readFile(path, 'utf8');
-      for (const [, attributes, script] of html.matchAll(
-        /<script\b([^>]*)>([\s\S]*?)<\/script>/gi
-      )) {
-        if (!/\bsrc\s*=/i.test(attributes)) {
-          hashes.add(`'sha256-${createHash('sha256').update(script).digest('base64')}'`);
-        }
+      for (const script of inlineScripts(html)) {
+        hashes.add(`'sha256-${createHash('sha256').update(script).digest('base64')}'`);
       }
     }
   }

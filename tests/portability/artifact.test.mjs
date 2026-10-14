@@ -3,6 +3,7 @@ import { createHash } from 'node:crypto';
 import { readFile, readdir } from 'node:fs/promises';
 import { test } from 'node:test';
 import { Script } from 'node:vm';
+import { inlineScripts } from '../../scripts/html-scripts.mjs';
 
 async function files(dir, prefix = '') {
   const result = [];
@@ -43,8 +44,7 @@ test('runtime assets are self-hosted and inline scripts match CSP', async () => 
   for (const file of (await files('dist')).filter((path) => path.endsWith('.html'))) {
     const html = await readFile(`dist/${file}`, 'utf8');
     assert.doesNotMatch(html, /(?:src|srcset)=["'](?:https?:)?\/\//i, file);
-    for (const [, attributes, script] of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)) {
-      if (/\bsrc\s*=/i.test(attributes)) continue;
+    for (const script of inlineScripts(html)) {
       const hash = createHash('sha256').update(script).digest('base64');
       assert.ok(csp.includes(`'sha256-${hash}'`), `${file}: script is blocked`);
     }

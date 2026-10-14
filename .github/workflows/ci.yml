@@ -63,3 +63,12 @@ jobs:
           name: dist
           path: dist
       - run: npx --yes @lhci/cli@0.14.0 autorun
+  deploy:
+    needs: a11y-lighthouse
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    uses: ./.github/workflows/deploy.yml
+    secrets: inherit

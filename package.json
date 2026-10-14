@@ -2,7 +2,7 @@
   "name": "krish-parajuli-portfolio",
   "version": "1.0.0",
   "private": true,
-  "description": "Static portfolio for Krish Parajuli \u2014 BSc Ethical Hacking & Cyber Security student.",
+  "description": "Static portfolio for Krish Parajuli — BSc Ethical Hacking & Cyber Security student.",
   "type": "module",
   "engines": {
     "node": "^22.22.2 || ^24.15.0"
@@ -33,6 +33,7 @@
     "@typescript-eslint/parser": "^8.71.1",
     "eslint": "^9.12.0",
     "markdownlint-cli": "^0.49.1",
+    "parse5": "8.0.1",
     "prettier": "^3.3.3",
     "prettier-plugin-astro": "^1.1.0",
     "typescript": "^5.6.3"
