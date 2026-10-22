@@ -1,0 +1,49 @@
+<div
+  data-scorpion-intro
+  hidden
+  role="dialog"
+  aria-modal="true"
+  aria-label="Scorpion opening animation"
+>
+  <canvas aria-hidden="true"></canvas>
+  <button type="button">
+    Skip intro <span aria-hidden="true">↗</span>
+  </button>
+</div>
+<style is:global>
+  [data-scorpion-intro] {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    isolation: isolate;
+  }
+  [data-scorpion-intro][hidden] {
+    display: none;
+  }
+  [data-scorpion-intro] canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+  [data-scorpion-intro] button {
+    position: absolute;
+    right: max(24px, env(safe-area-inset-right));
+    bottom: max(24px, env(safe-area-inset-bottom));
+    border: 1px solid #39554e;
+    border-radius: 30px;
+    padding: 12px 20px;
+    background: #08110fe6;
+    color: #d4eee5;
+    font: 12px monospace;
+    cursor: pointer;
+  }
+  [data-scorpion-intro] button:focus-visible {
+    outline: 2px solid #82f9cb;
+    outline-offset: 4px;
+  }
+  @media (prefers-reduced-motion: reduce), print {
+    [data-scorpion-intro] {
+      display: none !important;
+    }
+  }
+</style>
