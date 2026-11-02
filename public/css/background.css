@@ -1,0 +1,43 @@
+body {
+  isolation: isolate;
+  background-image: none;
+}
+body:before {
+  display: none;
+}
+.terminal-backdrop {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+  user-select: none;
+  contain: strict;
+}
+main.wrap {
+  position: relative;
+}
+.hacker-hero {
+  background: radial-gradient(ellipse at center, var(--bg) 0%, transparent 75%);
+}
+.section-heading,
+.section-intro,
+#about > p,
+#activity > ul {
+  background: linear-gradient(90deg, var(--bg), transparent);
+  border-radius: 4px;
+}
+.site-header {
+  background: var(--bg);
+}
+@media (prefers-reduced-motion: reduce) {
+  .terminal-backdrop {
+    opacity: 0.5;
+  }
+}
+@media print {
+  .terminal-backdrop {
+    display: none;
+  }
+}

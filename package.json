@@ -2,14 +2,14 @@
   "name": "krish-parajuli-portfolio",
   "version": "1.0.0",
   "private": true,
-  "description": "Static portfolio for Krish Parajuli — BSc Ethical Hacking & Cyber Security student.",
+  "description": "Static portfolio for Krish Parajuli \u2014 BSc Ethical Hacking & Cyber Security student.",
   "type": "module",
   "engines": {
     "node": "^22.22.2 || ^24.15.0"
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build && node ./scripts/generate-sitemap.mjs && node ./scripts/generate-headers.mjs && node ./scripts/validate-content.mjs && node ./scripts/check-public-files.mjs",
+    "build": "npm run build:effects && astro build && node ./scripts/generate-sitemap.mjs && node ./scripts/generate-headers.mjs && node ./scripts/validate-content.mjs && node ./scripts/check-public-files.mjs",
     "preview": "astro preview",
     "headers": "node ./scripts/generate-headers.mjs && node ./scripts/generate-sitemap.mjs",
     "stats:build": "node ./scripts/build-stats.mjs",
@@ -21,11 +21,14 @@
     "typecheck": "astro check && tsc --noEmit",
     "test": "node --test tests/*.test.mjs",
     "deploy:prepare": "node deploy/prepare-static.mjs && node deploy/vercel/prepare.mjs",
-    "test:portability": "node --test tests/portability/*.test.mjs"
+    "test:portability": "node --test tests/portability/*.test.mjs",
+    "build:effects": "node scripts/build-effects.mjs",
+    "test:3d": "node scripts/check-scorpion.mjs"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.19",
-    "astro": "^7.3.5"
+    "astro": "^7.3.5",
+    "three": "0.180.0"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.4",
@@ -36,7 +39,8 @@
     "parse5": "8.0.1",
     "prettier": "^3.3.3",
     "prettier-plugin-astro": "^1.1.0",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "rolldown": "1.2.12"
   },
   "overrides": {
     "markdownlint-cli": {

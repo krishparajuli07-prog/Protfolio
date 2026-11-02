@@ -1,0 +1,26 @@
+<footer class="site-footer">
+  <div class="wrap">
+    <p>© {new Date().getFullYear()} Krish Parajuli · Kathmandu, Nepal</p>
+    <p>
+      <a href="https://www.linkedin.com/in/krishparajuli">LinkedIn</a> ·{' '}
+      <a href="https://github.com/krishparajuli07-prog">GitHub</a> ·{' '}
+      <a href={`${import.meta.env.BASE_URL}rss.xml`}>RSS</a> ·{' '}
+      <a href={`${import.meta.env.BASE_URL}security/`}>Responsible disclosure</a>
+    </p>
+  </div>
+  <div id="cyber-controls" class="cyber-controls wrap" role="group" aria-label="Animation settings">
+    <span>Effects:</span>
+    <button type="button" data-effects-choice="full" aria-pressed="false">
+      Full
+    </button>
+    <button type="button" data-effects-choice="lite" aria-pressed="false">
+      Lite
+    </button>
+    <button type="button" data-effects-choice="off" aria-pressed="false">
+      Off
+    </button>
+    <button id="cyber-crt-toggle" type="button" aria-pressed="true">
+      CRT: ON
+    </button>
+  </div>
+</footer>

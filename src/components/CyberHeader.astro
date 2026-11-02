@@ -1,0 +1,44 @@
+<header class="site-header">
+  <nav class="nav" aria-label="Primary">
+    <a class="brand" href={`${import.meta.env.BASE_URL}`}>
+      <span class="brand-symbol">[k]</span> krish<span class="brand-accent">.sec</span>
+    </a>
+    <ul class="nav-links">
+      <li>
+        <a href={`${import.meta.env.BASE_URL}#about`}>About</a>
+      </li>
+      <li>
+        <a href={`${import.meta.env.BASE_URL}#projects`}>Projects</a>
+      </li>
+      <li>
+        <a href={`${import.meta.env.BASE_URL}#skills`}>Skills</a>
+      </li>
+      <li>
+        <a href={`${import.meta.env.BASE_URL}writeups/`}>Writeups</a>
+      </li>
+      <li>
+        <a href={`${import.meta.env.BASE_URL}resume/`}>Résumé</a>
+      </li>
+      <li>
+        <a
+          class="hire-link"
+          href={`${import.meta.env.BASE_URL}contact/`}
+          aria-label="Hire me — contact Krish"
+        >
+          <span class="hire-dot" aria-hidden="true"></span>Hire me <span aria-hidden="true">↗</span>
+        </a>
+      </li>
+    </ul>
+    <button id="fx-toggle" class="motion-toggle" type="button" aria-pressed="true" hidden>
+      FX on
+    </button>{' '}
+    <button
+      id="theme-toggle"
+      class="btn btn-ghost no-print"
+      type="button"
+      aria-label="Toggle theme"
+    >
+      ◐
+    </button>
+  </nav>
+</header>

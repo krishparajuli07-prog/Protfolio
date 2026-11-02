@@ -13,6 +13,9 @@ describe('content integrity', () => {
     const home = await readFile('src/pages/index.astro', 'utf8');
     assert.ok(home.includes('getCollection'));
     assert.ok(!home.includes('CEH'));
-    assert.ok(home.includes('Top 100'));
+    assert.ok(home.includes('projects.length'));
+    assert.ok(home.includes('findings'));
+    assert.ok(home.includes('authorized security practice'));
+    assert.ok(!home.includes('Top 100'));
   });
 });

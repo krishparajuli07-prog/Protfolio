@@ -1,138 +1,396 @@
 ---
 import { getCollection } from 'astro:content';
-import { readFile } from 'node:fs/promises';
 import Base from '../layouts/Base.astro';
-
+import certs from '../data/certifications.json';
+import education from '../data/education.json';
+import hacktivities from '../data/hacktivities.json';
 const projects = (await getCollection('projects', ({ data }) => !data.draft)).sort((a, b) =>
   a.data.title.localeCompare(b.data.title)
 );
-const writeups = (await getCollection('writeups', ({ data }) => !data.draft)).sort(
-  (a, b) => +b.data.pubDate - +a.data.pubDate
-);
-
-// Build-time computed stats — visible without JavaScript.
-const findings = projects.reduce((n, p) => n + (p.data.findingsCount ?? 0), 0);
-let certs: Array<{ status: string }> = [];
-try {
-  certs = JSON.parse(
-    await readFile(new URL('../data/certifications.json', import.meta.url), 'utf8')
-  );
-} catch {
-  certs = [];
-}
-const certsCompleted = certs.filter((c) => c.status === 'Complete').length;
-
 const featured = projects.filter((p) => p.data.featured).slice(0, 3);
-const latestWriteups = writeups.slice(0, 3);
-
-let skills: Array<{ group: string; items: string[] }> = [];
-let education: Array<{ school: string; program: string; period: string; detail: string }> = [];
-let hacktivities: Array<{
-  title: string;
-  type: string;
-  date: string;
-  url: string;
-  description: string;
-}> = [];
-let testimonials: Array<{ quote: string; author: string }> = [];
-try {
-  skills = JSON.parse(await readFile(new URL('../data/skills.json', import.meta.url), 'utf8'));
-} catch {}
-try {
-  education = JSON.parse(
-    await readFile(new URL('../data/education.json', import.meta.url), 'utf8')
-  );
-} catch {}
-try {
-  hacktivities = JSON.parse(
-    await readFile(new URL('../data/hacktivities.json', import.meta.url), 'utf8')
-  );
-} catch {}
-try {
-  testimonials = JSON.parse(
-    await readFile(new URL('../data/testimonials.json', import.meta.url), 'utf8')
-  );
-} catch {}
+const findings = projects.reduce((n, p) => n + (p.data.findingsCount ?? 0), 0);
+const latestWriteups = (await getCollection('writeups', ({ data }) => !data.draft))
+  .sort((a, b) => +b.data.pubDate - +a.data.pubDate)
+  .slice(0, 3);
 ---
 
 <Base
+  cyber
   title="Krish Parajuli — Web Application Security | Ethical Hacking Student"
   description="BSc Ethical Hacking & Cyber Security student focused on authorized web application VAPT, CVSS-rated reporting and remediation. Based in Kathmandu, Nepal."
 >
-  <section class="hero" aria-label="Introduction">
-    <div>
-      <p>
-        <span class="pill">Open to internships / junior roles</span>
+  <section class="hacker-hero" id="top" aria-labelledby="hero-title">
+    <div class="hero-copy">
+      <div
+        class="bicchu-sigil"
+        role="group"
+        aria-label="Bicchu — curious mind, defensive instinct."
+      >
+        <div class="sigil-grid" aria-hidden="true"></div>
+        <button
+          class="scorpion-trigger"
+          type="button"
+          aria-label="Make the scorpion strike with its tail"
+        >
+          <svg
+            class="sigil-emblem"
+            viewBox="0 0 180 180"
+            fill="none"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <circle
+              class="sigil-orbit orbit-one"
+              cx="90"
+              cy="90"
+              r="79"
+              stroke="currentColor"
+              stroke-width=".7"
+              stroke-dasharray="55 18 3 18"
+            />
+            <circle
+              class="sigil-orbit orbit-two"
+              cx="90"
+              cy="90"
+              r="68"
+              stroke="currentColor"
+              stroke-width=".5"
+              stroke-dasharray="2 9"
+            />
+            <path
+              class="sigil-cross"
+              d="M90 4v12m0 148v12M4 90h12m148 0h12"
+              stroke="currentColor"
+            />
+            <g
+              class="scorpion-mark natural-scorpion"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <g class="scorpion-legs" fill="none" stroke-width="2.2">
+                <path d="M81 88Q66 80 57 85L45 95M79 98Q64 94 57 102L45 110M81 108Q66 108 61 118L50 127M85 117Q73 121 70 131L63 139" />
+                <path d="M99 88Q114 80 123 85L135 95M101 98Q116 94 123 102L135 110M99 108Q114 108 119 118L130 127M95 117Q107 121 110 131L117 139" />
+              </g>
+              <g class="scorpion-claw claw-left" stroke-width="1.7">
+                <path d="M82 83Q64 81 58 66L53 53" fill="none" stroke-width="4" />
+                <path
+                  d="M54 59C42 59 34 48 38 35Q40 27 48 22L46 38 51 43 55 33 56 21Q67 32 64 44C63 52 60 57 54 59Z"
+                  fill="var(--bg-inset)"
+                />
+                <path d="M42 42Q43 51 53 53" fill="none" opacity=".5" />
+              </g>
+              <g class="scorpion-claw claw-right" stroke-width="1.7">
+                <path d="M98 83Q116 81 122 66L127 53" fill="none" stroke-width="4" />
+                <path
+                  d="M126 59C138 59 146 48 142 35Q140 27 132 22L134 38 129 43 125 33 124 21Q113 32 116 44C117 52 120 57 126 59Z"
+                  fill="var(--bg-inset)"
+                />
+                <path d="M138 42Q137 51 127 53" fill="none" opacity=".5" />
+              </g>
+              <g class="scorpion-body" stroke-width="1.5">
+                <path
+                  d="M90 72C79 72 76 82 77 96C77 110 82 122 90 128C98 122 103 110 103 96C104 82 101 72 90 72Z"
+                  fill="var(--bg-inset)"
+                />
+                <path
+                  d="M79 87Q90 93 101 87M78 97Q90 103 102 97M80 108Q90 113 100 108M84 118Q90 122 96 118"
+                  fill="none"
+                />
+                <path
+                  d="M84 78Q90 74 96 78L98 86Q90 90 82 86Z"
+                  fill="currentColor"
+                  fill-opacity=".28"
+                />
+                <path d="m87 73-3-6m9 6 3-6" fill="none" />
+                <circle cx="86" cy="81" r="1.6" fill="#e8ffdd" stroke="none" />
+                <circle cx="94" cy="81" r="1.6" fill="#e8ffdd" stroke="none" />
+              </g>
+              <g class="scorpion-tail-rig" stroke-width="1.4">
+                <path
+                  d="M90 125C111 142 137 129 147 107C158 83 147 58 128 51C115 46 105 51 103 61"
+                  fill="none"
+                  stroke="var(--bg-inset)"
+                  stroke-width="12"
+                />
+                <path
+                  d="M90 125C111 142 137 129 147 107C158 83 147 58 128 51C115 46 105 51 103 61"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="10"
+                  stroke-opacity=".3"
+                />
+                <path
+                  d="M90 125C111 142 137 129 147 107C158 83 147 58 128 51C115 46 105 51 103 61"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="10"
+                  stroke-dasharray="9 3"
+                />
+                <path
+                  d="M92 122C112 137 132 126 141 106C150 85 141 65 126 58"
+                  fill="none"
+                  stroke="var(--bg-inset)"
+                  stroke-width="2"
+                  opacity=".7"
+                />
+                <path
+                  d="M105 53C113 56 111 65 106 69C102 73 99 78 99 84C93 78 93 68 98 61Q99 56 105 53Z"
+                  fill="currentColor"
+                />
+                <path
+                  d="M103 62Q98 70 99 78"
+                  fill="none"
+                  stroke="var(--bg-inset)"
+                  stroke-width="1.2"
+                />
+              </g>
+            </g>
+            <circle class="sigil-satellite" cx="90" cy="11" r="3" fill="currentColor" />
+          </svg>
+        </button>
+        <div class="sigil-copy" aria-hidden="true">
+          <span class="sigil-kicker">IDENTITY // 0xB1C</span>
+          <strong class="sigil-name" data-text="BICCHU">
+            BICCHU
+          </strong>
+          <span class="sigil-caption">
+            CURIOUS MIND.
+            <br />
+            DEFENSIVE INSTINCT.
+          </span>
+          <span class="sigil-signal">
+            <i></i>
+            <i></i>
+            <i></i>
+            <i></i>
+            <i></i>
+            <i></i>
+            <i></i>
+            <i></i>
+            <span>STAY CURIOUS_</span>
+          </span>
+        </div>
+        <span class="sigil-corner corner-a" aria-hidden="true"></span>
+        <span class="sigil-corner corner-b" aria-hidden="true"></span>
+      </div>
+      <p class="eyebrow">
+        <span class="status-dot"></span> ETHICAL HACKING / WEB SECURITY
       </p>
-      <h1>
-        Hi, I'm Krish
+      <h1 id="hero-title">
+        Curiosity.
+        <br />
+        Code.
+        <br />
+        <span>Cybersecurity.</span>
+      </h1>
+      <p class="hero-name">
+        I’m Krish Parajuli
         <span class="cursor" aria-hidden="true">
           _
         </span>
-      </h1>
-      <p>
-        <strong>Enumerate. Exploit. Validate. Report. Remediate.</strong>
       </p>
-      <p>
-        BSc (Hons) Ethical Hacking &amp; Cyber Security student — aspiring Web Application Security
-        Analyst / Junior Penetration Tester.
+      <p class="hero-summary">
+        Web app VAPT | CVSS v3.1 reports | Burp Suite | SQLi, LFI, Access Control
       </p>
-      <p>
-        <a class="btn btn-primary" href={`${import.meta.env.BASE_URL}contact/`}>
-          Get in touch
-        </a>{' '}
-        <a class="btn btn-ghost" href={`${import.meta.env.BASE_URL}projects/`}>
-          View projects
+      <p class="hero-description">
+        I explore how web applications break — and document how to make them stronger. Ethical
+        hacking student. Lab builder. Relentless learner.
+      </p>
+      <div class="hero-actions">
+        <a class="btn btn-primary hire-hero" href={`${import.meta.env.BASE_URL}contact/`}>
+          <span class="hire-dot" aria-hidden="true"></span> Hire me{' '}
+          <span aria-hidden="true">↗</span>
         </a>
-      </p>
-      <p>
-        <a href="https://www.linkedin.com/in/krishparajuli">LinkedIn</a>
-        {' · '}
-        <a href="https://github.com/krishparajuli07-prog">GitHub</a>
-        {' · '}
-        <a href="https://tryhackme.com">TryHackMe</a>
+        <a class="btn btn-ghost" href="#projects">
+          Explore my work <span>↗</span>
+        </a>
+        <a class="btn btn-ghost" href={`${import.meta.env.BASE_URL}resume/`}>
+          View résumé →
+        </a>
+      </div>
+      <p class="availability">
+        <span class="status-dot"></span> Open to internships &amp; junior roles{' '}
+        <span class="muted">/ Kathmandu, Nepal</span>
       </p>
     </div>
-    <aside class="terminal" aria-label="whoami card">
-      <p>$ whoami</p>
-      <p data-typed="role: web-app-security student | focus: SQLi, LFI, upload, authZ | loc: Kathmandu, NP">
-        role: web-app-security student | focus: SQLi, LFI, upload, authZ | loc: Kathmandu, NP
-      </p>
-      <noscript>
-        <p>
-          role: web-app-security student
-          <br />
-          focus: SQLi, LFI, upload, authZ
-          <br />
-          loc: Kathmandu, NP
+    <div class="console-panel">
+      <div class="console-top">
+        <span class="window-dots" aria-hidden="true">
+          ● ● ●
+        </span>
+        <span>krish@portfolio:~</span>
+        <span>bash</span>
+      </div>
+      <div class="console-body">
+        <p class="command-line">
+          <span>❯</span> open identity://krish.parajuli
         </p>
-      </noscript>
-    </aside>
+        <div
+          class="access-scene"
+          aria-label="Simulated access sequence revealing Krish’s public portfolio"
+        >
+          <div class="simulation-label">
+            <span>SIMULATED PROFILE ACCESS</span>
+            <span>LOCAL / VISUAL ONLY</span>
+          </div>
+          <div class="identity-viewport">
+            <div class="identity-grid" aria-hidden="true"></div>
+            <div class="reticle" aria-hidden="true">
+              <span></span>
+            </div>
+            <img
+              class="identity-portrait"
+              src={`${import.meta.env.BASE_URL}images/krish-portrait.webp`}
+              alt="Krish Parajuli wearing a navy blazer"
+              width="1536"
+              height="1024"
+              decoding="async"
+              fetchpriority="high"
+            />
+            <div class="identity-sweep" aria-hidden="true"></div>
+            <span class="coordinate coord-a" aria-hidden="true">
+              ID: KP-001
+            </span>
+            <span class="coordinate coord-b" aria-hidden="true">
+              27.7° N / 85.3° E
+            </span>
+            <span class="coordinate coord-c" aria-hidden="true">
+              PUBLIC PROFILE
+            </span>
+            <div class="access-stamp">ACCESS GRANTED</div>
+          </div>
+          <div class="access-log" aria-hidden="true">
+            <p>
+              <span>01</span> Initializing portfolio interface <b>OK</b>
+            </p>
+            <p>
+              <span>02</span> Decoding public identity <b>OK</b>
+            </p>
+            <p>
+              <span>03</span> Loading projects &amp; skills <b>OK</b>
+            </p>
+          </div>
+          <div class="identity-result">
+            <span class="status-dot" aria-hidden="true"></span>
+            <div>
+              <strong id="decoded-name">KRISH PARAJULI</strong>
+              <small>ETHICAL HACKING &amp; CYBER SECURITY</small>
+            </div>
+            <span class="identity-check" aria-hidden="true">
+              ✓
+            </span>
+          </div>
+          <div class="access-track" aria-hidden="true">
+            <span></span>
+          </div>
+        </div>
+        <div class="terminal-divider"></div>
+        <p class="console-hint">
+          Explore this portfolio. Try <strong>help</strong> or <strong>projects</strong>.
+        </p>
+        <div
+          id="terminal-output"
+          role="log"
+          aria-label="Command output"
+          aria-live="polite"
+          tabindex="0"
+        ></div>
+        <noscript>
+          <p>Enable JavaScript for the terminal, or use the navigation links to explore.</p>
+        </noscript>
+        <form id="explorer-form" autocomplete="off">
+          <label for="terminal-command">
+            ❯ <span class="sr-only">Portfolio command</span>
+          </label>
+          <input
+            id="terminal-command"
+            name="command"
+            placeholder="type a command…"
+            spellcheck="false"
+            maxlength="60"
+          />
+          <button type="submit" aria-label="Run portfolio command">
+            ↵
+          </button>
+        </form>
+      </div>
+      <div class="console-bottom">
+        <span>
+          <i class="status-dot"></i> IDENTITY SESSION / KP-001
+        </span>
+        <span>NO LIVE SCANS</span>
+      </div>
+    </div>
+    <a class="scroll-cue" href="#projects">
+      SCROLL TO EXPLORE <span>↓</span>
+    </a>
   </section>
-
   <section aria-label="Stats">
     <ul class="stat-strip">
       <li>
-        <strong data-count={projects.length}>{projects.length}</strong>
+        <strong data-count={projects.length}>{projects.length}</strong>{' '}
         <span>projects completed</span>
       </li>
       <li>
-        <strong data-count={findings}>{findings}</strong>
-        <span>findings documented</span>
+        <strong data-count={findings}>{findings}</strong> <span>findings documented</span>
       </li>
       <li>
-        <strong data-count={certsCompleted}>{certsCompleted}</strong>
-        <span>certifications completed</span>
+        <strong>In progress</strong> <span>certification journey</span>
       </li>
       <li>
-        <strong>Top 100</strong>
-        <span>TryHackMe · Nepal</span>
+        <strong>Lab-first</strong>
+        <span>authorized security practice</span>
       </li>
     </ul>
   </section>
-
-  <section class="fade-in" aria-labelledby="about-h">
-    <h2 id="about-h">About</h2>
+  <section id="projects" class="fade-in" aria-labelledby="feat-h">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">01 / PROJECTS</p>
+        <h2 id="feat-h">Selected operations.</h2>
+      </div>
+      <span class="section-mark" aria-hidden="true">
+        [ 01 ]
+      </span>
+    </div>
+    <p class="section-intro">
+      Authorized lab assessments. Clear evidence. Practical remediation. Open a case study to see
+      the process behind each finding.
+    </p>
+    <div class="cards project-grid">
+      {featured.map((p) => (
+        <article class="card project-card" data-tags={p.data.tags.join(' ')}>
+          <h3>{p.data.title}</h3>
+          <p>
+            {p.data.year} · {p.data.findingsCount ? `${p.data.findingsCount} findings` : 'Ongoing'}
+          </p>
+          <ul class="tags">
+            {p.data.tags.map((t) => (
+              <li>{t}</li>
+            ))}
+          </ul>
+          <p>{p.data.summary}</p>
+          <p>
+            <a href={`${import.meta.env.BASE_URL}projects/${p.id}/`}>Read case study →</a>
+          </p>
+        </article>
+      ))}
+    </div>
+    <a class="text-link" href={`${import.meta.env.BASE_URL}projects/`}>
+      Browse all projects ↗
+    </a>
+  </section>
+  <section id="about" class="fade-in" aria-labelledby="about-h">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">02 / ABOUT</p>
+        <h2 id="about-h">The person behind the prompt.</h2>
+      </div>
+      <span class="section-mark" aria-hidden="true">
+        [ 02 ]
+      </span>
+    </div>
     <p>
       BSc (Hons) Ethical Hacking &amp; Cyber Security student focused on web application security. I
       practice authorized black-box VAPT in lab environments — SQL injection, LFI/path traversal,
@@ -142,33 +400,133 @@ try {
     <p>
       <a href={`${import.meta.env.BASE_URL}about/`}>Read more →</a>
     </p>
-  </section>
-
-  <section class="fade-in" aria-labelledby="skills-h">
-    <h2 id="skills-h">Skills &amp; Expertise</h2>
-    <div class="cards">
-      {skills.map((g) => (
-        <div class="card">
-          <h3>{g.group}</h3>
-          <ul class="tags">
-            {g.items.map((i) => (
-              <li>{i}</li>
-            ))}
-          </ul>
-        </div>
-      ))}
+    <div class="method-strip">
+      <span>
+        01 <b>Enumerate</b>
+      </span>
+      <span>
+        02 <b>Validate</b>
+      </span>
+      <span>
+        03 <b>Report</b>
+      </span>
+      <span>
+        04 <b>Remediate</b>
+      </span>
     </div>
   </section>
-
-  <section class="fade-in" aria-labelledby="cred-h">
-    <h2 id="cred-h">Credentials</h2>
+  <section id="skills" class="fade-in" aria-labelledby="skills-h">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">03 / SKILLS</p>
+        <h2 id="skills-h">My working toolkit.</h2>
+      </div>
+      <span class="section-mark" aria-hidden="true">
+        [ 03 ]
+      </span>
+    </div>
+    <div class="port-scan">
+      <p class="scan-caption">
+        PORT / STATE / SERVICE <span>AUTHORIZED LAB TOOLKIT</span>
+      </p>
+      <p class="scan-status" aria-hidden="true">
+        Scan complete: 10 services identified
+      </p>
+      <div class="toolkit-map" aria-hidden="true">
+        <canvas></canvas>
+        <span class="toolkit-map-kicker">TOOLKIT / NETWORK</span>
+        <span class="toolkit-map-label">10 SERVICES / AUTHORIZED LAB</span>
+        <span class="toolkit-map-axis">X / Y / Z</span>
+        <div class="toolkit-map-info">
+          <strong>CONNECTED TOOLKIT</strong>
+          <span>
+            Hover a service below
+            <br />
+            to isolate its connection.
+          </span>
+        </div>
+      </div>
+      <ul class="port-list">
+        <li>
+          <span class="port">22/tcp</span>
+          <span class="port-state">open</span>
+          <strong>Burp Suite</strong>
+          <span class="skill-detail">Web proxy, Repeater, testing workflows</span>
+        </li>
+        <li>
+          <span class="port">80/tcp</span>
+          <span class="port-state">open</span>
+          <strong>SQL Injection</strong>
+          <span class="skill-detail">Authorized testing & validation</span>
+        </li>
+        <li>
+          <span class="port">443/tcp</span>
+          <span class="port-state">open</span>
+          <strong>Access Control</strong>
+          <span class="skill-detail">Authentication & authorization testing</span>
+        </li>
+        <li>
+          <span class="port">8080/tcp</span>
+          <span class="port-state">open</span>
+          <strong>LFI / Path Traversal</strong>
+          <span class="skill-detail">File-handling validation & remediation</span>
+        </li>
+        <li>
+          <span class="port">8443/tcp</span>
+          <span class="port-state">open</span>
+          <strong>CVSS v3.1</strong>
+          <span class="skill-detail">Severity scoring & remediation reports</span>
+        </li>
+        <li>
+          <span class="port">3000/tcp</span>
+          <span class="port-state">open</span>
+          <strong>Linux & Kali</strong>
+          <span class="skill-detail">Repeatable web-security lab environments</span>
+        </li>
+        <li>
+          <span class="port">5000/tcp</span>
+          <span class="port-state">open</span>
+          <strong>Bash & Python</strong>
+          <span class="skill-detail">Scripting & automation</span>
+        </li>
+        <li>
+          <span class="port">9000/tcp</span>
+          <span class="port-state">open</span>
+          <strong>Nmap / RustScan</strong>
+          <span class="skill-detail">Service enumeration</span>
+        </li>
+        <li>
+          <span class="port">9090/tcp</span>
+          <span class="port-state">open</span>
+          <strong>Gobuster / FFUF</strong>
+          <span class="skill-detail">Web content discovery</span>
+        </li>
+        <li>
+          <span class="port">9418/tcp</span>
+          <span class="port-state">open</span>
+          <strong>Git & curl</strong>
+          <span class="skill-detail">Version control & HTTP investigation</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+  <section id="credentials" class="fade-in" aria-labelledby="cred-h">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">04 / CREDENTIALS</p>
+        <h2 id="cred-h">Always in learning mode.</h2>
+      </div>
+      <span class="section-mark" aria-hidden="true">
+        [ 04 ]
+      </span>
+    </div>
     <div class="cards two">
       <div class="card">
         <h3>Certifications</h3>
         <ul>
-          {certs.slice(0, 4).map((c: any) => (
+          {certs.slice(0, 4).map((c) => (
             <li>
-              {c.title} — {c.issuer} <span class="badge complete">{c.status}</span>
+              {c.title} — {c.issuer} <span class="badge">{c.status}</span>
             </li>
           ))}
         </ul>
@@ -193,55 +551,16 @@ try {
       </div>
     </div>
   </section>
-
-  <section class="fade-in" aria-labelledby="feat-h">
-    <h2 id="feat-h">Featured Projects</h2>
-    <div class="cards">
-      {featured.map((p) => (
-        <article class="card" data-tags={p.data.tags.join(' ')}>
-          <h3>{p.data.title}</h3>
-          <p>
-            {p.data.year} · {p.data.findingsCount} findings
-          </p>
-          <ul class="tags">
-            {p.data.tags.map((t) => (
-              <li>{t}</li>
-            ))}
-          </ul>
-          <p>{p.data.summary}</p>
-          <p>
-            <a href={`${import.meta.env.BASE_URL}projects/${p.id}/`}>Read case study →</a>
-          </p>
-        </article>
-      ))}
+  <section id="writeups" class="fade-in" aria-labelledby="wu-h">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">05 / WRITEUPS</p>
+        <h2 id="wu-h">From the field notes.</h2>
+      </div>
+      <span class="section-mark" aria-hidden="true">
+        [ 05 ]
+      </span>
     </div>
-  </section>
-
-  <section class="fade-in" aria-labelledby="hack-h">
-    <h2 id="hack-h">Hacktivities</h2>
-    <ul>
-      {hacktivities.map((h) => (
-        <li>
-          <a
-            href={
-              h.url.startsWith('/')
-                ? `${import.meta.env.BASE_URL}${h.url.replace(/^\//, '')}`
-                : h.url
-            }
-          >
-            {h.title}
-          </a>{' '}
-          — {h.type} · {h.date}
-        </li>
-      ))}
-    </ul>
-    <p>
-      <a href={`${import.meta.env.BASE_URL}hacktivities/`}>All hacktivities →</a>
-    </p>
-  </section>
-
-  <section class="fade-in" aria-labelledby="wu-h">
-    <h2 id="wu-h">Latest Writeups</h2>
     <div class="cards">
       {latestWriteups.map((w) => (
         <article class="card">
@@ -253,30 +572,53 @@ try {
       ))}
     </div>
   </section>
-
-  {testimonials.length > 0 && (
-    <section aria-labelledby="testi-h">
-      <h2 id="testi-h">Testimonials</h2>
-      <div class="cards">
-        {testimonials.map((t: any) => (
-          <figure class="card">
-            <blockquote>{t.quote}</blockquote>
-            <figcaption>— {t.author}</figcaption>
-          </figure>
-        ))}
+  <section id="activity" class="fade-in" aria-labelledby="hack-h">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">06 / ACTIVITY</p>
+        <h2 id="hack-h">Practice. Document. Repeat.</h2>
       </div>
-    </section>
-  )}
-
-  <section class="fade-in" aria-labelledby="cta-h">
-    <h2 id="cta-h">Let's work together</h2>
+      <span class="section-mark" aria-hidden="true">
+        [ 06 ]
+      </span>
+    </div>
+    <ul>
+      {hacktivities.map((h) => (
+        <li>
+          <a href={h.url.startsWith('/') ? `${import.meta.env.BASE_URL}${h.url.slice(1)}` : h.url}>
+            {h.title}
+          </a>{' '}
+          — {h.type} · {h.date}
+        </li>
+      ))}
+    </ul>
     <p>
-      <a class="btn btn-primary" href="mailto:hello@krishparajuli.com.np">
-        hello@krishparajuli.com.np
-      </a>{' '}
-      <a class="btn btn-ghost" href="https://www.linkedin.com/in/krishparajuli">
-        LinkedIn
-      </a>
+      <a href={`${import.meta.env.BASE_URL}hacktivities/`}>All hacktivities →</a>
     </p>
+  </section>
+  <section class="contact-banner" id="connect">
+    <p class="eyebrow">NEXT CONNECTION / YOU + ME</p>
+    <h2>
+      Let’s build something
+      <br />
+      <span>more secure.</span>
+    </h2>
+    <p>
+      I’m looking for opportunities to learn, contribute, and turn security findings into meaningful
+      improvements.
+    </p>
+    <a class="btn btn-primary" href={`${import.meta.env.BASE_URL}contact/`}>
+      Hire me — let’s talk ↗
+    </a>
+    <a
+      class="contact-secondary"
+      href="mailto:hello@krishparajuli.com.np"
+      style="overflow-wrap:anywhere"
+    >
+      hello@krishparajuli.com.np ↗
+    </a>
+    <a class="contact-secondary" href="https://github.com/krishparajuli07-prog">
+      Explore my GitHub →
+    </a>
   </section>
 </Base>
