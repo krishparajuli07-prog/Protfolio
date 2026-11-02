@@ -1,0 +1,49 @@
+/* TUNING: monochrome overlays derive from the active theme; magenta is the sole permitted split hue. */
+:root {
+  --cyber-crt-opacity: 0.025;
+  --cyber-vignette-opacity: 0.12;
+  --cyber-split-opacity: 0.065;
+}
+.cyber-crt {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 80;
+  opacity: var(--cyber-crt-opacity);
+  background: repeating-linear-gradient(0deg, transparent 0 3px, var(--text) 3px 4px);
+  contain: strict;
+}
+.cyber-crt::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 12vw color-mix(in srgb, var(--bg) 85%, transparent);
+  opacity: var(--cyber-vignette-opacity);
+  border-inline: 1px solid color-mix(in srgb, var(--primary) 20%, transparent);
+}
+.cyber-crt-full {
+  animation: cyber-phosphor 13s linear infinite;
+}
+@keyframes cyber-phosphor {
+  0%,
+  96%,
+  100% {
+    opacity: var(--cyber-crt-opacity);
+  }
+  97% {
+    opacity: calc(var(--cyber-crt-opacity) * 0.78);
+  }
+}
+html[data-crt='off'] .cyber-crt,
+html[data-effects='off'] .cyber-crt {
+  display: none;
+}
+@media (prefers-reduced-motion: reduce), print {
+  .cyber-crt {
+    display: none !important;
+  }
+}
+
+:root[data-theme='light'] {
+  --cyber-crt-opacity: 0.018;
+}

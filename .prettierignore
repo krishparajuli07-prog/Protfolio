@@ -9,3 +9,7 @@ deploy/docker/headers.conf
 deploy/docker/headers.caddy
 deploy/cloudflare/_headers
 deploy/netlify/_headers
+
+public/effects/bundle.js
+public/effects/scene.bundle.js
+public/effects/THREE-LICENSE.txt

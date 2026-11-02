@@ -1,0 +1,473 @@
+/* TUNING: the existing palette drives every material, light and glass surface. */
+:root {
+  --spatial-depth: 18px;
+  --spatial-glow: color-mix(in srgb, var(--primary) 12%, transparent);
+}
+.hacker-hero {
+  perspective: 1600px;
+  overflow: visible;
+}
+.bicchu-sigil {
+  width: 100%;
+  max-width: 520px;
+  min-height: 222px;
+  gap: 16px;
+  padding: 0 10px 18px 0;
+  background: radial-gradient(
+    ellipse at 26% 55%,
+    color-mix(in srgb, var(--primary) 6%, transparent),
+    transparent 66%
+  );
+}
+.scorpion-trigger {
+  width: 230px;
+  height: 210px;
+  flex: 0 0 230px;
+  position: relative;
+  border-radius: 12px;
+  transform: none !important;
+}
+.scorpion-trigger::after {
+  content: 'INTERACT / STING';
+  position: absolute;
+  inset: auto 0 -3px;
+  font: 7px var(--mono);
+  letter-spacing: 2px;
+  color: var(--muted);
+  opacity: 0.75;
+  pointer-events: none;
+}
+.scorpion-trigger .sigil-emblem {
+  position: absolute;
+  inset: 12%;
+  width: 76%;
+  height: 76%;
+  transition: opacity 0.45s;
+}
+.scorpion-trigger.scene-ready .sigil-emblem {
+  opacity: 0;
+}
+.scorpion-trigger canvas.scorpion-webgl {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  filter: none;
+  transition: opacity 0.45s;
+}
+.scorpion-trigger:not(.scene-ready) canvas.scorpion-webgl {
+  opacity: 0;
+}
+.scorpion-trigger[data-scene='loading']::after {
+  content: 'INITIALIZING / 3D';
+}
+.scorpion-trigger.scene-ready {
+  animation: none !important;
+}
+.sigil-copy {
+  position: relative;
+  z-index: 2;
+}
+.sigil-name {
+  font-size: clamp(34px, 3.6vw, 50px);
+  text-shadow:
+    0 1px 0 var(--border),
+    0 2px 0 var(--border),
+    0 3px 0 var(--border),
+    0 12px 32px var(--spatial-glow);
+}
+.sigil-grid {
+  opacity: 0.45;
+  transform: perspective(450px) rotateX(35deg);
+  transform-origin: center 70%;
+}
+.spatial-atmosphere {
+  position: absolute !important;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0 !important;
+  pointer-events: none;
+}
+.hacker-hero > .hero-copy,
+.hacker-hero > .console-panel {
+  z-index: 1;
+}
+.console-panel.spatial-panel {
+  --depth-rx: 0deg;
+  --depth-ry: -2deg;
+  position: relative;
+  overflow: visible;
+  transform-style: preserve-3d;
+  transform: perspective(1400px) rotateX(var(--depth-rx)) rotateY(var(--depth-ry));
+  border-color: color-mix(in srgb, var(--primary) 55%, var(--border));
+  box-shadow:
+    1px 1px 0 var(--border),
+    3px 3px 0 var(--bg-inset),
+    5px 5px 0 var(--border),
+    12px 18px 0 color-mix(in srgb, var(--bg-inset) 85%, transparent),
+    0 24px 70px color-mix(in srgb, var(--bg) 65%, transparent),
+    0 0 65px var(--spatial-glow);
+}
+.console-panel.spatial-panel::before {
+  content: '';
+  position: absolute;
+  inset: -9px;
+  border: 1px solid color-mix(in srgb, var(--primary) 12%, transparent);
+  border-radius: 8px;
+  pointer-events: none;
+  transform: translateZ(-20px);
+}
+.console-panel.spatial-panel .console-top {
+  background: linear-gradient(
+    110deg,
+    color-mix(in srgb, var(--primary) 5%, var(--card)),
+    var(--bg-inset)
+  );
+  border-radius: 4px 4px 0 0;
+}
+.console-panel.spatial-panel .console-body {
+  border-radius: 0 0 4px 4px;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--text) 2%, var(--card)),
+    var(--bg-inset)
+  );
+}
+.identity-viewport {
+  perspective: 600px;
+}
+.holo-orbits {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  transform-style: preserve-3d;
+}
+.holo-orbits i {
+  position: absolute;
+  width: 158px;
+  height: 158px;
+  top: 50%;
+  left: 50%;
+  margin: -79px 0 0 -79px;
+  border: 1px solid color-mix(in srgb, var(--primary) 55%, transparent);
+  border-radius: 50%;
+  transform-style: preserve-3d;
+}
+.holo-ring-one {
+  transform: rotateX(68deg) rotateZ(15deg);
+}
+.holo-ring-two {
+  transform: rotateY(64deg) rotateZ(-30deg);
+  border-style: dashed !important;
+  opacity: 0.5;
+}
+.holo-ring-three {
+  transform: rotateX(-58deg) rotateY(32deg);
+  border-color: var(--border) !important;
+  opacity: 0.6;
+}
+html[data-effects='full'] .cyber-in-view .holo-ring-one {
+  animation: holo-orbit-one 17s linear infinite;
+}
+html[data-effects='full'] .cyber-in-view .holo-ring-two {
+  animation: holo-orbit-two 23s linear infinite;
+}
+@keyframes holo-orbit-one {
+  to {
+    transform: rotateX(68deg) rotateZ(375deg);
+  }
+}
+@keyframes holo-orbit-two {
+  to {
+    transform: rotateY(64deg) rotateZ(-390deg);
+  }
+}
+.identity-viewport .identity-portrait {
+  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+html[data-effects='full'] .identity-viewport:hover .identity-portrait {
+  transform: translateZ(25px) scale(1.025);
+  animation: none;
+}
+.identity-viewport .coordinate {
+  transition: transform 0.6s;
+}
+html[data-effects='full'] .identity-viewport:hover .coordinate {
+  transform: translateZ(40px);
+}
+.cyber-portrait:not(.cyber-in-view) *,
+.cyber-portrait:not(.cyber-in-view)::after {
+  animation-play-state: paused !important;
+}
+.project-card.spatial-panel {
+  --depth-rx: 0deg;
+  --depth-ry: 0deg;
+  transform-style: preserve-3d;
+  transform: perspective(1000px) rotateX(var(--depth-rx)) rotateY(var(--depth-ry));
+  box-shadow:
+    0 2px 0 var(--border),
+    0 6px 0 var(--bg-inset),
+    0 7px 0 var(--border);
+  transition:
+    box-shadow 0.3s,
+    border-color 0.3s;
+}
+html[data-effects='full'] .project-card.spatial-panel:hover {
+  transform: perspective(1000px) rotateX(var(--depth-rx)) rotateY(var(--depth-ry));
+  box-shadow:
+    0 2px 0 var(--border),
+    0 8px 0 var(--bg-inset),
+    0 9px 0 var(--border),
+    0 22px 45px color-mix(in srgb, var(--bg) 65%, transparent),
+    0 0 30px var(--spatial-glow);
+}
+.project-card.spatial-panel h3 {
+  transform: translateZ(22px);
+}
+.project-card.spatial-panel .tags {
+  transform: translateZ(14px);
+}
+.project-card.spatial-panel p {
+  transform: translateZ(10px);
+}
+.project-card.spatial-panel > p:last-child {
+  transform: translateZ(22px);
+}
+.project-card.spatial-panel::after {
+  transform: translateZ(2px);
+}
+.project-card.spatial-panel .cyber-access-flash {
+  transform: translateZ(35px);
+}
+.toolkit-map {
+  height: 180px;
+  position: relative;
+  overflow: hidden;
+  margin: 0 0 20px;
+  border-block: 1px solid var(--border);
+  background: radial-gradient(
+    ellipse at center,
+    color-mix(in srgb, var(--primary) 5%, transparent),
+    transparent 70%
+  );
+}
+.toolkit-map::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 30px 30px;
+  opacity: 0.12;
+  transform: perspective(350px) rotateX(55deg) scale(1.3);
+}
+.toolkit-map canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.toolkit-map-kicker,
+.toolkit-map-label,
+.toolkit-map-axis {
+  position: absolute;
+  color: var(--muted);
+  font: 8px var(--mono);
+  letter-spacing: 1.5px;
+  pointer-events: none;
+}
+.toolkit-map-kicker {
+  top: 17px;
+  left: 18px;
+}
+.toolkit-map-label {
+  bottom: 15px;
+  left: 18px;
+  color: var(--primary);
+  max-width: 70%;
+}
+.toolkit-map-axis {
+  right: 18px;
+  bottom: 15px;
+}
+.port-list li {
+  transition: background 0.2s;
+}
+.port-list li.network-selected {
+  background: color-mix(in srgb, var(--primary) 5%, transparent);
+}
+.port-list li.network-selected strong {
+  color: var(--primary);
+}
+.spatial-fracture {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 11000;
+  pointer-events: none;
+}
+.spatial-impact .scorpion-trigger {
+  box-shadow: 0 0 35px var(--spatial-glow);
+}
+html[data-effects='off'] .spatial-panel,
+html[data-effects='lite'] .spatial-panel {
+  transform: none !important;
+}
+html[data-effects='off'] .spatial-panel *,
+html[data-effects='lite'] .spatial-panel * {
+  transform: none;
+}
+html[data-effects='off'] .holo-orbits {
+  display: none;
+}
+@media (max-width: 1000px) and (min-width: 761px) {
+  .scorpion-trigger {
+    width: 180px;
+    height: 190px;
+    flex-basis: 180px;
+  }
+  .bicchu-sigil {
+    gap: 6px;
+    min-height: 205px;
+  }
+  .sigil-name {
+    font-size: 36px;
+  }
+}
+@media (max-width: 760px) {
+  .bicchu-sigil {
+    min-height: 185px;
+    gap: 10px;
+    max-width: 430px;
+  }
+  .scorpion-trigger {
+    width: 180px;
+    height: 175px;
+    flex-basis: 180px;
+  }
+  .sigil-name {
+    font-size: 36px;
+  }
+  .console-panel.spatial-panel {
+    transform: none;
+    box-shadow:
+      4px 5px 0 var(--bg-inset),
+      5px 6px 0 var(--border);
+  }
+  .toolkit-map {
+    height: 145px;
+  }
+  .toolkit-map-kicker,
+  .toolkit-map-label,
+  .toolkit-map-axis {
+    font-size: 7px;
+    letter-spacing: 0.5px;
+  }
+  .holo-orbits i {
+    width: 140px;
+    height: 140px;
+    margin: -70px 0 0 -70px;
+  }
+}
+@media (max-width: 380px) {
+  .scorpion-trigger {
+    width: 145px;
+    height: 165px;
+    flex-basis: 145px;
+  }
+  .sigil-name {
+    font-size: 30px;
+  }
+  .bicchu-sigil {
+    gap: 5px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .spatial-panel,
+  .spatial-panel * {
+    transform: none !important;
+  }
+  .holo-orbits,
+  .spatial-atmosphere,
+  .spatial-fracture {
+    display: none !important;
+  }
+  .scorpion-trigger .sigil-emblem {
+    opacity: 1 !important;
+  }
+  .scorpion-webgl {
+    display: none !important;
+  }
+}
+@media print {
+  .spatial-atmosphere,
+  .holo-orbits,
+  .spatial-fracture,
+  .scorpion-webgl,
+  .toolkit-map {
+    display: none !important;
+  }
+  .scorpion-trigger .sigil-emblem {
+    opacity: 1 !important;
+  }
+  .spatial-panel {
+    transform: none !important;
+    box-shadow: none !important;
+  }
+}
+
+/* Keep duplicated glitch channels decorative, including for assistive technology. */
+.cyber-glitch::before,
+.cyber-glitch::after {
+  content: none !important;
+}
+.cyber-glitch-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  white-space: pre-wrap;
+}
+.cyber-glitching .glitch-accent {
+  color: var(--primary);
+  opacity: 0.25;
+  animation: cyber-slices 0.2s steps(2) both;
+}
+.cyber-glitching .glitch-split {
+  color: rgba(255, 0, 100, 0.065);
+  opacity: 1;
+  animation: cyber-slices 0.2s steps(2) reverse both;
+}
+.nav-links {
+  scrollbar-width: none;
+}
+.nav-links::-webkit-scrollbar {
+  display: none;
+}
+
+.toolkit-map-info {
+  position: absolute;
+  left: 58%;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  font: 10px/1.8 var(--mono);
+  color: var(--muted);
+}
+.toolkit-map-info strong {
+  display: block;
+  color: var(--primary);
+  font-size: 11px;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+  font-weight: 400;
+}
+@media (max-width: 760px) {
+  .toolkit-map-info {
+    display: none;
+  }
+}
